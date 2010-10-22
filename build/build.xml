@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="GeoEditor" default="dist" basedir=".">
+
+    <description>
+        App Build File
+    </description>
+
+    <property name="src" location="../src"/>
+    <property name="externals" location="../externals"/>
+    <property name="build" location="${ant.project.name}"/>
+
+    <target name="init">
+        <tstamp/>
+        <mkdir dir="${build}"/>
+    </target>
+    
+    <target name="dev" depends="clean, init" description="set up development build">
+        <echo>Setting up development build.</echo>
+
+        <filterset id="dev-replacements">
+            <filter token="title" value="${ant.project.name} (debug)"/>
+            <!-- Ext Resources -->
+            <filter token="ext-all.js" value="ext-all-debug.js"/>
+            <!-- OpenLayers Resources -->
+            <filter token="ol-style.css" value="../../externals/openlayers/theme/default/style.css"/>
+            <filter token="OpenLayers.js" value="../../externals/openlayers/lib/OpenLayers.js"/>
+            <!-- GeoExt Resources -->
+            <filter token="geoext-all.css" value="../../externals/geoext/resources/css/geoext-all-debug.css"/>
+            <filter token="gxtheme-gray.css" value="../../externals/geoext/resources/css/gxtheme-gray.css"/>
+            <filter token="GeoExt.js" value="../../externals/geoext/lib/GeoExt.js"/>
+            <!-- gxp Resources -->
+            <filter token="gxp.js" value="../../externals/gxp/src/script/loader.js"/>
+            <filter token="gxp.css" value="../../externals/gxp/src/theme/all.css"/>
+            <!-- GeoExplorer Resources -->
+            <filter token="theme-dir" value="../../src/theme"/>
+            <filter token="GeoExplorer.js" value="../../src/script/app/GeoExplorer.js"/>
+            <filter token="ux.js" value="../../src/script/ux/RowExpander.js"/>
+            <filter token="blank.gif" value="../../src/theme/app/img/blank.gif"/>
+        </filterset>
+
+        <copy todir="${build}/ext">
+            <fileset dir="${externals}/ext"></fileset>
+        </copy>
+
+        <copy file="${src}/html/index.html" todir="${build}">
+            <filterset refid="dev-replacements"/>
+        </copy>
+        <copy file="${src}/html/about.html" todir="${build}">
+            <filterset refid="dev-replacements"/>
+        </copy>
+
+    </target>
+    
+    <target name="jsbuild" depends="init" description="concatenate JavaScript source">
+        <echo>Concatenating JavaScript.</echo>
+        <mkdir dir="${build}/script"/>
+        <exec executable="jsbuild" failonerror="true">
+            <arg line="jsbuild.cfg -v"/>
+            <arg value="-o"/>
+            <arg path="${build}/script"/>
+        </exec>
+    </target>
+
+    <target name="dist" depends="clean, init, jsbuild" description="prepare app for distribution">
+        <echo>Preparing for distribution.</echo>
+        
+        <copy todir="${build}/ext">
+            <fileset dir="${externals}/ext"></fileset>
+        </copy>
+
+        <copy todir="${build}/theme/app">
+            <fileset dir="${src}/theme">
+                <!-- .svn excluded by default -->
+            </fileset>
+        </copy>
+
+        <copy todir="${build}/theme/gxp">
+            <fileset dir="${externals}/gxp/src/theme">
+                <!-- .svn excluded by default -->
+            </fileset>
+        </copy>
+
+        <copy todir="${build}/theme/ol">
+            <fileset dir="${externals}/openlayers/theme/default">
+                <!-- .svn excluded by default -->
+            </fileset>
+        </copy>
+
+        <copy todir="${build}/theme/gx">
+            <fileset dir="${externals}/geoext/resources">
+                <!-- .svn excluded by default -->
+            </fileset>
+        </copy>
+
+        <filterset id="dist-replacements">
+            <filter token="title" value="${ant.project.name}"/>
+            <!-- Ext Resources -->
+            <filter token="ext-all.js" value="ext-all.js"/>
+            <!-- OpenLayers Resources -->
+            <filter token="ol-style.css" value="theme/ol/style.css"/>
+            <filter token="OpenLayers.js" value="script/OpenLayers.js"/>
+            <!-- GeoExt Resources -->
+            <filter token="geoext-all.css" value="theme/gx/css/geoext-all-debug.css"/>
+            <filter token="gxtheme-gray.css" value="theme/gx/css/gxtheme-gray.css"/>
+            <filter token="GeoExt.js" value="script/GeoExt.js"/>
+            <!-- gxp Resources -->
+            <filter token="gxp.js" value="script/gxp.js"/>
+            <filter token="gxp.css" value="theme/gxp/all.css"/>
+            <!-- GeoExplorer Resources -->
+            <filter token="theme-dir" value="theme/app"/>
+            <filter token="GeoExplorer.js" value="script/GeoExplorer.js"/>
+            <filter token="ux.js" value="script/ux.js"/>
+            <filter token="blank.gif" value="theme/app/img/blank.gif"/>
+        </filterset>
+
+        <copy file="${src}/html/index.html" todir="${build}">
+            <filterset refid="dist-replacements"/>
+        </copy>
+        <copy file="${src}/html/about.html" todir="${build}">
+            <filterset refid="dist-replacements"/>
+        </copy>        
+        
+    </target>
+
+    <target name="zip" depends="dist" description="create zip archive of app">
+        <echo>Preparing zip archive.</echo>
+        <zip destfile="${ant.project.name}.zip">
+            <zipfileset dir="${build}" prefix="${ant.project.name}"/>
+        </zip>
+    </target>
+    
+    <target name="clean" description="remove previous build">
+        <delete dir="${build}"/>
+    </target>
+
+</project>
+

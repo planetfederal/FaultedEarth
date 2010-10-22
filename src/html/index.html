@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+    <head>
+        <title>@title@</title>
+        
+        <!-- IE 8 Compatibility -->
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        
+        <!-- Ext resources -->
+        <link rel="stylesheet" type="text/css" href="ext/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="ext/resources/css/xtheme-gray.css" />
+        <script type="text/javascript" src="ext/adapter/ext/ext-base.js"></script>
+        <script type="text/javascript" src="ext/@ext-all.js@"></script>
+
+        <!-- OpenLayers resources -->
+        <link rel="stylesheet" type="text/css" href="@ol-style.css@" />
+        <script type="text/javascript" src="@OpenLayers.js@"></script>
+
+        <!-- GeoExt resources -->
+        <link rel="stylesheet" type="text/css" href="@geoext-all.css@" />
+        <link rel="stylesheet" type="text/css" href="@gxtheme-gray.css@" />
+        <script type="text/javascript" src="@GeoExt.js@"></script> 
+
+        <!-- TODO: deal with this in a different way -->
+        <script type="text/javascript" src="script/override-ext-ajax.js"></script> 
+
+        <!-- gxp resources -->
+        <script type="text/javascript" src="@gxp.js@"></script> 
+        <link rel="stylesheet" type="text/css" href="@gxp.css@" />
+
+        <!-- GeoExplorer resources -->
+        <link rel="shortcut icon" href="@theme-dir@/img/favicon.ico"/>
+        <link rel="stylesheet" type="text/css" href="@theme-dir@/geoexplorer.css" />
+        <!--[if IE]><link rel="stylesheet" type="text/css" href="@theme-dir@/ie.css"/><![endif]-->
+        <script type="text/javascript" src="@GeoExplorer.js@"></script>
+        <script type="text/javascript" src="@ux.js@"></script>
+
+        <script>
+            Ext.BLANK_IMAGE_URL = "@theme-dir@/img/blank.gif";
+            OpenLayers.Layer.WMS.prototype.DEFAULT_PARAMS.transparent = true;
+            var app = new GeoExplorer({
+                
+                /**
+                 * The alignToGrid setting forces all layers to have a max
+                 * extent of (-180, -90, 180, 90) - and only works for geographic
+                 * projections.  With alignToGrid set to false, the layer max
+                 * extent is derived from the capabilities doc (llbbox).  When
+                 * false, if a layer with a small extent is on the bottom of the
+                 * draw order, the map will be restricted to panning within that
+                 * extent.  Setting alignToGrid to true allows panning to the
+                 * global extent regardless of the lowest layer.
+                 */
+                //alignToGrid: true,
+
+                /**
+                 * The application loads capabilities from a single WMS.  The
+                 * wms value below is an absolute URL for this WMS.  Because the
+                 * application loads capabilities from a different host than the
+                 * one that serves this application, you need to configure a
+                 * proxy to have the application work.
+                 *
+                 * If you have a WMS running on the same origin as this application
+                 * you can use a relative URL and remove the proxy property below.
+                 */
+                wms: "/geoserver/wms",
+
+                /**
+                 * If you do not have a WMS running on the same host that serves
+                 * this application, you need to set up a proxy.  For a proxy
+                 * that works with mod_python, see the following:
+                 * http://svn.opengeo.org/util/proxy/proxy.py
+                 *
+                 * If you do have a WMS on the same origin as this application,
+                 * provide a relative URL for the WMS above and comment out this
+                 * proxy property below.
+                 */
+                //proxy: "/proxy/?url=",
+
+                map: {
+                    projection: "EPSG:900913",
+                    units: "m",
+                    maxResolution: 156543.0339,
+                    maxExtent: [
+                        -20037508.34, -20037508.34,
+                        20037508.34, 20037508.34
+                    ],
+                    center: [0, 0],
+                    zoom: 1,
+                    layers: [{
+                        name: "world",
+                        title: "Base Map",
+                        format: "image/png"
+                    }]
+                },
+                
+                wfs: "/geoserver/wfs"
+
+            });
+        </script>
+
+    </head>
+    <body>
+    </body>
+</html>
