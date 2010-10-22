@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="GeoEditor" default="dist" basedir=".">
+<project name="FaultedEarth" default="dist" basedir=".">
 
     <description>
         App Build File
     </description>
 
-    <property name="src" location="../src"/>
-    <property name="externals" location="../externals"/>
-    <property name="build" location="${ant.project.name}"/>
+    <property name="src" location="src"/>
+    <property name="externals" location="externals"/>
+    <property name="build" location="build/${ant.project.name}"/>
 
     <target name="init">
         <tstamp/>
@@ -54,7 +54,7 @@
     <target name="jsbuild" depends="init" description="concatenate JavaScript source">
         <echo>Concatenating JavaScript.</echo>
         <mkdir dir="${build}/script"/>
-        <exec executable="jsbuild" failonerror="true">
+        <exec executable="jsbuild" failonerror="true" dir="build">
             <arg line="jsbuild.cfg -v"/>
             <arg value="-o"/>
             <arg path="${build}/script"/>
@@ -120,6 +120,13 @@
             <filterset refid="dist-replacements"/>
         </copy>        
         
+    </target>
+
+    <target name="war" depends="dist" description="create web archive">
+        <echo>Creating WAR file.</echo>
+        <war destfile="build/FaultedEarth.war" webxml="${src}/main/webapp/WEB-INF/web.xml">
+            <fileset dir="${build}"/>
+        </war>
     </target>
 
     <target name="zip" depends="dist" description="create zip archive of app">
