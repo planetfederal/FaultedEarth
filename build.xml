@@ -54,7 +54,7 @@
     <target name="jsbuild" depends="init" description="concatenate JavaScript source">
         <echo>Concatenating JavaScript.</echo>
         <mkdir dir="${build}/script"/>
-        <exec executable="jsbuild" failonerror="true" dir="build">
+        <exec executable="jsbuild" failonerror="true">
             <arg line="jsbuild.cfg -v"/>
             <arg value="-o"/>
             <arg path="${build}/script"/>
