@@ -4,15 +4,6 @@ A web based editor for managing earthquake related spatial data.
 
 Developed by [OpenGeo](http://opengeo.org/) in support of the [Global Earthquake Model](http://www.globalquakemodel.org/).
 
-## Development
-
-Get set up for development with the following:
-
-    git clone git@github.com:opengeo/FaultedEarth.git
-    cd FaultedEarth
-    git submodule init
-    git submodule update
-
 ## Running and deploying GeoEditor
 
 These instructions describe how to deploy GeoEditor assuming you have a copy of the application archive (GeoEditor.zip).
@@ -60,4 +51,13 @@ If you want to add the "topp:states" layer to the layers that are initially disp
         }
         // ...
     });
+
+## Development
+
+Get set up for development with the following:
+
+    git clone git@github.com:opengeo/FaultedEarth.git
+    cd FaultedEarth
+    git submodule init
+    git submodule update
 
