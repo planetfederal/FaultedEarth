@@ -4,15 +4,15 @@ A web based editor for managing earthquake related spatial data.
 
 Developed by [OpenGeo](http://opengeo.org/) in support of the [Global Earthquake Model](http://www.globalquakemodel.org/).
 
-## Running and deploying GeoEditor
+## Running and deploying FaultedEarth
 
 These instructions describe how to deploy GeoEditor assuming you have a copy of the application archive (GeoEditor.zip).
 
 1. Extract the archive to someplace in your web root.
 
-    you@prompt:~/public_html$ unzip GeoEditor.zip
+    you@prompt:~/public_html$ unzip FaultedEarth.zip
 
-2. Load the application in your browser (e.g. http://localhost/~you/GeoEditor).
+2. Load the application in your browser (e.g. http://localhost/~you/FaultedEarth).
 
 Note that the inital configuration for the application works off of a local WMS and WFS. If you are using a remote WMS or WFS, you must configure a local proxy.  See the index.html source for detail on proxy configuration.
 
