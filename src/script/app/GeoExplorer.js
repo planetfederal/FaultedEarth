@@ -159,6 +159,10 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
      */
     initPortal: function() {
         
+        // add a vector layer for display of queried features
+        this.createFeatureLayer();
+        this.mapPanel.map.addLayer(this.featureLayer);
+        
         // TODO: make a proper component out of this
         var mapOverlay = this.createMapOverlay();
         this.mapPanel.add(mapOverlay);
@@ -429,6 +433,269 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             ]
         });
 
+        var queryPanel = new gxp.QueryPanel({
+            title: "Feature Query",
+            region: "west",
+            width: 390,
+            autoScroll: true,
+            bodyStyle: "padding: 10px",
+            map: this.mapPanel.map,
+            maxFeatures: 100,
+            layerStore: new Ext.data.JsonStore({
+                data: {layers: this.featureTypes},
+                root: "layers",
+                fields: ["title", "name", "namespace", "url", "schema"]
+            }),
+            bbar: ["->", {
+                text: "Query",
+                iconCls: "icon-find",
+                disabled: true,
+                handler: function() {
+                    queryPanel.query();
+                }
+            }],
+            listeners: {
+                ready: function(panel, store) {
+                    panel.getBottomToolbar().enable();
+                    this.featureStore = store;
+
+                    var control = this.mapPanel.map.getControlsByClass(
+                        "OpenLayers.Control.DrawFeature")[0];
+                    var button = this.toolbar.find("iconCls", "icon-addfeature")[0];
+                    
+                    var handlers = {
+                        "Point": OpenLayers.Handler.Point,
+                        "Line": OpenLayers.Handler.Path,
+                        "Curve": OpenLayers.Handler.Path,
+                        "Polygon": OpenLayers.Handler.Polygon,
+                        "Surface": OpenLayers.Handler.Polygon
+                    };
+                    
+                    var simpleType = panel.geometryType.replace("Multi", "");
+                    var Handler = handlers[simpleType];
+                    if (Handler) {
+                        var active = control.active;
+                        if (active) {
+                            control.deactivate();
+                        }
+                        control.handler = new Handler(
+                            control, control.callbacks,
+                            Ext.apply(control.handlerOptions, {multi: (simpleType != panel.geometryType)})
+                        );
+                        if (active) {
+                            control.activate();
+                        }
+                        button.enable();
+                        // hack to avoid button being disabled again when
+                        // app.ready is fired after queryPanel.ready
+                        delete button.initialConfig.disabled
+                    } else {
+                        button.disable();
+                    }
+                },
+                query: function(panel, store) {
+                    featureGrid.setStore(store);
+                    featureGrid.setTitle("Search Results (loading ...)");
+                    new Ext.LoadMask(featureGrid.el, {msg: 'Please Wait...', store: store}).show();
+                },
+                storeload: function(panel, store, records) {
+                    featureGrid.setTitle(this.getSearchResultsTitle(store.getTotalCount()));
+                    store.on({
+                        "remove": function() {
+                            featureGrid.setTitle(this.getSearchResultsTitle(store.getTotalCount()-1));
+                        },
+                        scope: this
+                    })
+                },
+                scope: this
+            }
+        });
+
+        // create a SelectFeature control
+        // "fakeKey" will be ignord by the SelectFeature control, so only one
+        // feature can be selected by clicking on the map, but allow for
+        // multiple selection in the featureGrid
+        var popup;
+        var selectControl = new OpenLayers.Control.SelectFeature(
+            this.featureLayer, {clickout: false, multipleKey: "fakeKey"}
+        );
+        selectControl.events.on({
+            "activate": function() {
+                selectControl.unselectAll(popup && popup.editing && {except: popup.feature});
+            },
+            "deactivate": function() {
+                if (popup) {
+                    if (popup.editing) {
+                        popup.on("cancelclose", function() {
+                            selectControl.activate();
+                        }, this, {single: true})
+                    }
+                    popup.close();
+                }
+            }
+        });
+            
+        this.featureLayer.events.on({
+            "featureunselected": function(evt) {
+                if (popup) {
+                    popup.close();
+                }
+            },
+            "beforefeatureselected": function(evt) {
+                //TODO decide if we want to allow feature selection while a
+                // feature is being edited. If so, we have to revisit the
+                // SelectFeature/ModifyFeature setup, because that would
+                // require to have the SelectFeature control *always*
+                // activated *after* the ModifyFeature control. Otherwise. we
+                // must not configure the ModifyFeature control in standalone
+                // mode, and use the SelectFeature control that comes with the
+                // ModifyFeature control instead.
+                if (popup) {
+                    return !popup.editing;
+                }
+            },
+            "featureselected": function(evt) {
+                var feature = evt.feature;
+                if (selectControl.active) {
+                    this._selectingFeature = true;
+                    popup = new gxp.FeatureEditPopup({
+                        collapsible: true,
+                        feature: feature,
+                        editing: feature.state === OpenLayers.State.INSERT,
+                        schema: queryPanel.attributeStore,
+                        allowDelete: true,
+                        width: 200,
+                        height: 250,
+                        listeners: {
+                            "close": function() {
+                                if (feature.layer) {
+                                    selectControl.unselect(feature);
+                                }
+                            },
+                            "featuremodified": function(popup, feature) {
+                                popup.disable();
+                                this.featureStore.on({
+                                    write: {
+                                        fn: function() {
+                                            if (popup) {
+                                                popup.enable();
+                                            }
+                                        },
+                                        single: true
+                                    }
+                                });                                
+                                if (feature.state === OpenLayers.State.DELETE) {                                    
+                                    /**
+                                     * If the feature state is delete, we need to
+                                     * remove it from the store (so it is collected
+                                     * in the store.removed list.  However, it should
+                                     * not be removed from the layer.  Until
+                                     * http://trac.geoext.org/ticket/141 is addressed
+                                     * we need to stop the store from removing the
+                                     * feature from the layer.
+                                     */
+                                    var store = this.featureStore;
+                                    store._removing = true; // TODO: remove after http://trac.geoext.org/ticket/141
+                                    store.remove(store.getRecordFromFeature(feature));
+                                    delete store._removing; // TODO: remove after http://trac.geoext.org/ticket/141
+                                }
+                                this.featureStore.save();
+                            },
+                            "canceledit": function(popup, feature) {
+                                this.featureStore.commitChanges();
+                            },
+                            scope: this
+                        }
+                    });
+                    popup.show();
+                }
+            },
+            "beforefeaturesadded": function(evt) {
+                if (featureGrid.store !== this.featureStore) {
+                    featureGrid.setStore(this.featureStore);
+                }
+            },
+            "featuresadded": function(evt) {
+                var feature = evt.features.length === 1 && evt.features[0];
+                if (feature && feature.state === OpenLayers.State.INSERT) {
+                    selectControl.activate();
+                    selectControl.select(feature);
+                }
+            },
+            scope: this
+        });
+        this.mapPanel.map.addControl(selectControl);
+        
+        queryPanel.on({
+            beforequery: function(panel) {
+                if (popup && popup.editing) {
+                    popup.on("close", panel.query, panel, {single: true});
+                    popup.close();
+                    return false;
+                }
+            }
+        });
+
+        var featureGrid = new gxp.grid.FeatureGrid({
+            title: "Search Results (submit a query to see results)",
+            region: "center",
+            layer: this.featureLayer,
+            sm: new GeoExt.grid.FeatureSelectionModel({
+                selectControl: selectControl,
+                singleSelect: false,
+                autoActivateControl: false,
+                listeners: {
+                    "beforerowselect": function() {
+                        if (selectControl.active && !this._selectingFeature) {
+                            return false;
+                        }
+                        delete this._selectingFeature;
+                    },
+                    scope: this
+                }
+            }),
+            autoScroll: true,
+            bbar: ["->", {
+                text: "Display on map",
+                enableToggle: true,
+                pressed: true,
+                toggleHandler: function(btn, pressed) {
+                    this.featureLayer.setVisibility(pressed);
+                },
+                scope: this
+            }, {
+                text: "Zoom to selected",
+                iconCls: "icon-zoom-to",
+                handler: function(btn) {
+                    var bounds, geom, extent;
+                    featureGrid.getSelectionModel().each(function(r) {
+                        geom = r.get("feature").geometry;
+                        if (geom) {
+                            extent = geom.getBounds();
+                            if (bounds) {
+                                bounds.extend(extent);
+                            } else {
+                                bounds = extent.clone();
+                            }
+                        }
+                    }, this);
+                    if (bounds) {
+                        this.mapPanel.map.zoomToExtent(bounds);
+                    }
+                },
+                scope: this                
+            }]
+        });
+        
+        var southPanel = new Ext.Panel({
+            layout: "border",
+            region: "south",
+            height: 250,
+            split: true,
+            collapsible: true,
+            items: [queryPanel, featureGrid]
+        });
+
         this.toolbar = new Ext.Toolbar({
             xtype: "toolbar",
             region: "north",
@@ -447,34 +714,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             });
         });
 
-        var googleEarthPanel = new gxp.GoogleEarthPanel({
-            mapPanel: this.mapPanel,
-            listeners: {
-                beforeadd: function(record) {
-                    return record.get("group") !== "background";
-                }
-            }
-        });
-
-        googleEarthPanel.on("show", function() {
-            if (layersContainer.rendered) {
-                layersContainer.getTopToolbar().disable();
-            }
-            layerTree.getSelectionModel().un("beforeselect", updateLayerActions, this);
-        }, this);
-
-        googleEarthPanel.on("hide", function() {
-            if (layersContainer.rendered) {
-                layersContainer.getTopToolbar().enable();
-            }
-            var sel = layerTree.getSelectionModel();
-            var node = sel.getSelectedNode();
-            updateLayerActions.apply(this, [sel, node]);
-            sel.on(
-                "beforeselect", updateLayerActions, this
-            );
-        }, this);
-
         this.mapPanelContainer = new Ext.Panel({
             layout: "card",
             region: "center",
@@ -482,8 +721,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 border: false
             },
             items: [
-                this.mapPanel,
-                googleEarthPanel
+                this.mapPanel
             ],
             activeItem: 0
         });
@@ -491,7 +729,8 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         this.portalItems = [
             this.toolbar,
             this.mapPanelContainer,
-            westPanel
+            westPanel,
+            southPanel
         ];
         
         GeoExplorer.superclass.initPortal.apply(this, arguments);        
@@ -765,6 +1004,46 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         return mapOverlay;
     },
 
+    /** private: method[createFeatureLayer]
+     *  Create a vector layer and assign it to this.featureLayer
+     */
+    createFeatureLayer: function() {
+        
+        this.featureLayer = new OpenLayers.Layer.Vector(null, {
+            displayInLayerSwitcher: false,
+            styleMap: new OpenLayers.StyleMap({
+                "default": new OpenLayers.Style(null, {
+                    rules: [new OpenLayers.Rule({
+                        symbolizer: {
+                            "Point": {
+                                pointRadius: 4,
+                                graphicName: "square",
+                                fillColor: "white",
+                                fillOpacity: 1,
+                                strokeWidth: 1,
+                                strokeOpacity: 1,
+                                strokeColor: "#333333"
+                            },
+                            "Line": {
+                                strokeWidth: 4,
+                                strokeOpacity: 1,
+                                strokeColor: "#ff9933"
+                            },
+                            "Polygon": {
+                                strokeWidth: 2,
+                                strokeOpacity: 1,
+                                strokeColor: "#ff6633",
+                                fillColor: "white",
+                                fillOpacity: 0.3
+                            }
+                        }
+                    })]
+                })
+            })    
+        });
+        
+    },
+
     /** private: method[createTools]
      * Create the toolbar configuration for the main panel.  This method can be 
      * overridden in derived explorer classes such as :class:`GeoExplorer.Composer`
@@ -793,6 +1072,31 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             toggleGroup: toolGroup
         });
 
+        var infoButton = new GeoExt.Action({
+            tooltip: "Edit existing feature",
+            iconCls: "icon-editfeature",
+            toggleGroup: toolGroup,
+            enableToggle: true,
+            allowDepress: false,
+            control: this.mapPanel.map.getControlsByClass(
+                "OpenLayers.Control.SelectFeature"
+            )[0]
+        });
+
+        var addFeatureButton = new GeoExt.Action({
+            tooltip: "Create a new feature",
+            iconCls: "icon-addfeature",
+            toggleGroup: toolGroup,
+            enableToggle: true,
+            allowDepress: false,
+            disabled: true,
+            control: new OpenLayers.Control.DrawFeature(
+                this.featureLayer,
+                OpenLayers.Handler.Point
+            ),
+            map: this.mapPanel.map
+        });
+
         // create a navigation history control
         var historyControl = new OpenLayers.Control.NavigationHistory();
         this.mapPanel.map.addControl(historyControl);
@@ -811,68 +1115,6 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             disabled: true,
             control: historyControl.next
         });
-
-        // create a get feature info control
-        var info = {controls: []};
-        var infoButton = new Ext.Button({
-            tooltip: "Get Feature Info",
-            iconCls: "icon-getfeatureinfo",
-            toggleGroup: toolGroup,
-            enableToggle: true,
-            allowDepress: false,
-            toggleHandler: function(button, pressed) {
-                for (var i = 0, len = info.controls.length; i < len; i++){
-                    if(pressed) {
-                        info.controls[i].activate();
-                    } else {
-                        info.controls[i].deactivate();
-                    }
-                }
-            }
-        });
-
-        var updateInfo = function() {
-            var queryableLayers = this.mapPanel.layers.queryBy(function(x){
-                return x.get("queryable");
-            });
-
-            var map = this.mapPanel.map;
-            var control;
-            for (var i = 0, len = info.controls.length; i < len; i++){
-                control = info.controls[i];
-                control.deactivate();  // TODO: remove when http://trac.openlayers.org/ticket/2130 is closed
-                control.destroy();
-            }
-
-            info.controls = [];
-            queryableLayers.each(function(x){
-                var control = new OpenLayers.Control.WMSGetFeatureInfo({
-                    url: x.get("layer").url,
-                    queryVisible: true,
-                    layers: [x.get("layer")],
-                    eventListeners: {
-                        getfeatureinfo: function(evt) {
-                            var match = evt.text.match(/<body[^>]*>([\s\S]*)<\/body>/);
-                            if (match && !match[1].match(/^\s*$/)) {
-                                this.displayPopup(
-                                    evt, x.get("title") || x.get("name"), match[1]
-                                );
-                            }
-                        },
-                        scope: this
-                    }
-                });
-                map.addControl(control);
-                info.controls.push(control);
-                if(infoButton.pressed) {
-                    control.activate();
-                }
-            }, this);
-        };
-
-        this.mapPanel.layers.on("update", updateInfo, this);
-        this.mapPanel.layers.on("add", updateInfo, this);
-        this.mapPanel.layers.on("remove", updateInfo, this);
 
         // create split button for measure controls
         var activeIndex = 0;
@@ -950,6 +1192,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             "-",
             navAction,
             infoButton,
+            addFeatureButton,
             measureSplit,
             "-",
             new Ext.Button({
