@@ -116,16 +116,24 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 var list = capabilities.featureTypeList.featureTypes;
                 var num = list.length;
                 this.featureTypes = new Array(num);
-                var ftype, parts;
+                var ftype, params;
                 for (var i=0; i<num; ++i) {
                     ftype = list[i];
-                    parts = ftype.name.split(":");
+                    params = {
+                        version: "1.1",
+                        request: "DescribeFeatureType",
+                        typeName: ftype.name,
+                        namespace: "xmlns(" + ftype.featureNS + ")"
+                    };
                     this.featureTypes[i] = {
-                        title: ftype.title || parts[1],
-                        name: parts[1],
-                        namespace: doc.documentElement.getAttribute("xmlns:" + parts[0]),
+                        title: ftype.title || ftype.name,
+                        name: ftype.name,
+                        namespace: ftype.featureNS,
                         url: this.wfs,
-                        schema: this.wfs + "?version=1.1.0&request=DescribeFeatureType&typeName=" + ftype.name
+                        schema: OpenLayers.Util.urlAppend(
+                            this.wfs,
+                            OpenLayers.Util.getParameterString(params)
+                        ) 
                     };
                 }
                 callback.call(this);
@@ -1465,6 +1473,14 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             items: [tabs]
         });
         win.show();
+    },
+
+    getSearchResultsTitle: function(count) {
+        var str = (count == 1 && "1 feature") ||
+            (count > 1 && count + " features") ||
+            "no features";
+        return "Search Results (" + str + ")";
     }
+
 });
 
