@@ -32,14 +32,18 @@
             <filter token="gxp.js" value="../../externals/gxp/src/script/loader.js"/>
             <filter token="gxp.css" value="../../externals/gxp/src/theme/all.css"/>
             <!-- GeoExplorer Resources -->
-            <filter token="theme-dir" value="../../src/theme"/>
-            <filter token="GeoExplorer.js" value="../../src/script/app/GeoExplorer.js"/>
+            <filter token="GeoExplorer.js" value="../../src/script/app/loader.js"/>
             <filter token="ux.js" value="../../src/script/ux/RowExpander.js"/>
-            <filter token="blank.gif" value="../../src/theme/app/img/blank.gif"/>
         </filterset>
 
         <copy todir="${build}/ext">
             <fileset dir="${externals}/ext"></fileset>
+        </copy>
+
+        <copy todir="${build}/theme/app">
+            <fileset dir="${src}/theme">
+                <!-- .svn excluded by default -->
+            </fileset>
         </copy>
 
         <copy file="${src}/html/index.html" todir="${build}">
@@ -107,10 +111,8 @@
             <filter token="gxp.js" value="script/gxp.js"/>
             <filter token="gxp.css" value="theme/gxp/all.css"/>
             <!-- GeoExplorer Resources -->
-            <filter token="theme-dir" value="theme/app"/>
             <filter token="GeoExplorer.js" value="script/GeoExplorer.js"/>
             <filter token="ux.js" value="script/ux.js"/>
-            <filter token="blank.gif" value="theme/app/img/blank.gif"/>
         </filterset>
 
         <copy file="${src}/html/index.html" todir="${build}">

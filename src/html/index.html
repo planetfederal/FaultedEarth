@@ -29,53 +29,49 @@
         <link rel="stylesheet" type="text/css" href="@gxp.css@" />
 
         <!-- GeoExplorer resources -->
-        <link rel="shortcut icon" href="@theme-dir@/img/favicon.ico"/>
-        <link rel="stylesheet" type="text/css" href="@theme-dir@/geoexplorer.css" />
-        <!--[if IE]><link rel="stylesheet" type="text/css" href="@theme-dir@/ie.css"/><![endif]-->
+        <link rel="shortcut icon" href="theme/app/img/favicon.ico"/>
+        <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" />
+        <!--[if IE]><link rel="stylesheet" type="text/css" href="theme/app/ie.css"/><![endif]-->
         <script type="text/javascript" src="@GeoExplorer.js@"></script>
         <script type="text/javascript" src="@ux.js@"></script>
 
         <script>
-            Ext.BLANK_IMAGE_URL = "@theme-dir@/img/blank.gif";
             OpenLayers.Layer.WMS.prototype.DEFAULT_PARAMS.transparent = true;
+            Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
+            OpenLayers.ImgPath = "externals/openlayers/img/";
             var app = new GeoExplorer({
-                
-                /**
-                 * The alignToGrid setting forces all layers to have a max
-                 * extent of (-180, -90, 180, 90) - and only works for geographic
-                 * projections.  With alignToGrid set to false, the layer max
-                 * extent is derived from the capabilities doc (llbbox).  When
-                 * false, if a layer with a small extent is on the bottom of the
-                 * draw order, the map will be restricted to panning within that
-                 * extent.  Setting alignToGrid to true allows panning to the
-                 * global extent regardless of the lowest layer.
-                 */
-                //alignToGrid: true,
-
-                /**
-                 * The application loads capabilities from a single WMS.  The
-                 * wms value below is an absolute URL for this WMS.  Because the
-                 * application loads capabilities from a different host than the
-                 * one that serves this application, you need to configure a
-                 * proxy to have the application work.
-                 *
-                 * If you have a WMS running on the same origin as this application
-                 * you can use a relative URL and remove the proxy property below.
-                 */
-                wms: "/geoserver/wms",
-
-                /**
-                 * If you do not have a WMS running on the same host that serves
-                 * this application, you need to set up a proxy.  For a proxy
-                 * that works with mod_python, see the following:
-                 * http://svn.opengeo.org/util/proxy/proxy.py
-                 *
-                 * If you do have a WMS on the same origin as this application,
-                 * provide a relative URL for the WMS above and comment out this
-                 * proxy property below.
-                 */
-                //proxy: "/proxy/?url=",
-
+                wfs: "/geoserver/wfs",
+                proxy: "proxy/?url=",
+                alignToGrid: true,
+                about: {
+                    title: "GeoExplorer Demo Map",
+                    "abstract": "This is a demonstration of GeoExplorer, " +
+                        "an application for assembling and publishing web " +
+                        "based maps.  After adding layer to the map, find " +
+                        "the 'Publish Map' button above to embed this map " +
+                        "in any web page.",
+                    contact: "For more information, contact <a href='http://opengeo.org'>OpenGeo</a>."
+                },
+                defaultSourceType: "gx_wmssource",
+                sources: {
+                    local: {
+                        url: "/geoserver/ows",
+                        title: "Local GeoServer"
+                    },
+                    suite: {
+                        url: "http://v2.suite.opengeo.org/geoserver/ows",
+                        title: "Remote Suite GeoServer"
+                    },
+                    osm: {
+                        ptype: "gx_osmsource"
+                    },
+                    google: {
+                        ptype: "gx_googlesource"
+                    },
+                    ol: {
+                        ptype: "gx_olsource"
+                    }
+                },
                 map: {
                     projection: "EPSG:900913",
                     units: "m",
@@ -84,18 +80,84 @@
                         -20037508.34, -20037508.34,
                         20037508.34, 20037508.34
                     ],
-                    center: [0, 0],
-                    zoom: 1,
                     layers: [{
-                        name: "world",
-                        title: "Base Map",
-                        format: "image/png"
-                    }]
-                },
-                
-                wfs: "/geoserver/wfs"
-
+                        source: "google",
+                        title: "Google Terrain",
+                        name: "TERRAIN",
+                        group: "background"
+                    }, {
+                        source: "ol",
+                        group: "background",
+                        fixed: true,
+                        type: "OpenLayers.Layer",
+                        args: [
+                            "None", {visibility: false}
+                        ]
+                    }],
+                    center: [0, 0],
+                    zoom: 2
+                }
             });
+
+
+            // var app = new GeoExplorer({
+            //     
+            //     /**
+            //      * The alignToGrid setting forces all layers to have a max
+            //      * extent of (-180, -90, 180, 90) - and only works for geographic
+            //      * projections.  With alignToGrid set to false, the layer max
+            //      * extent is derived from the capabilities doc (llbbox).  When
+            //      * false, if a layer with a small extent is on the bottom of the
+            //      * draw order, the map will be restricted to panning within that
+            //      * extent.  Setting alignToGrid to true allows panning to the
+            //      * global extent regardless of the lowest layer.
+            //      */
+            //     //alignToGrid: true,
+            // 
+            //     /**
+            //      * The application loads capabilities from a single WMS.  The
+            //      * wms value below is an absolute URL for this WMS.  Because the
+            //      * application loads capabilities from a different host than the
+            //      * one that serves this application, you need to configure a
+            //      * proxy to have the application work.
+            //      *
+            //      * If you have a WMS running on the same origin as this application
+            //      * you can use a relative URL and remove the proxy property below.
+            //      */
+            //     wms: "/geoserver/wms",
+            // 
+            //     /**
+            //      * If you do not have a WMS running on the same host that serves
+            //      * this application, you need to set up a proxy.  For a proxy
+            //      * that works with mod_python, see the following:
+            //      * http://svn.opengeo.org/util/proxy/proxy.py
+            //      *
+            //      * If you do have a WMS on the same origin as this application,
+            //      * provide a relative URL for the WMS above and comment out this
+            //      * proxy property below.
+            //      */
+            //     //proxy: "/proxy/?url=",
+            // 
+            //     map: {
+            //         projection: "EPSG:900913",
+            //         units: "m",
+            //         maxResolution: 156543.0339,
+            //         maxExtent: [
+            //             -20037508.34, -20037508.34,
+            //             20037508.34, 20037508.34
+            //         ],
+            //         center: [0, 0],
+            //         zoom: 1,
+            //         layers: [{
+            //             name: "world",
+            //             title: "Base Map",
+            //             format: "image/png"
+            //         }]
+            //     },
+            //     
+            //     wfs: "/geoserver/wfs"
+            // 
+            // });
         </script>
 
     </head>

@@ -25,12 +25,28 @@ body {
     background-color: #EAEAEA;
 }
 
+.x-tree-node img.gx-folder, .x-tree-node-collapsed img.gx-folder{
+    background: url(../../ext/resources/images/default/tree/folder.gif);
+}
+ 
+.x-tree-node-expanded img.gx-folder {
+    background: url(../../ext/resources/images/default/tree/folder-open.gif);
+}
+
 .x-btn .icon-geoexplorer {
     background-image: url(img/geoexplorer.png);
 }
 
+.x-btn .icon-about {
+    background-image: url(img/silk/help.png);
+}
+
 .x-btn .icon-addlayers {
     background-image: url(img/silk/add.png);
+}
+
+.x-btn .icon-addserver {
+    background-image: url(img/silk/map_add.png);
 }
 
 .x-btn .icon-removelayers, .x-menu-item .icon-removelayers {
@@ -41,6 +57,10 @@ body {
     background-image: url(img/silk/wrench.png);
 }
 
+.x-btn .icon-getfeatureinfo {
+    background-image: url(img/silk/information.png);
+}
+
 .x-btn .icon-editfeature {
     background-image: url(img/silk/map_edit.png);
 }
@@ -48,6 +68,7 @@ body {
 .x-btn .icon-addfeature {
     background-image: url(img/silk/pencil_add.png);
 }
+
 .x-btn .icon-save {
     background-image: url(img/geosilk/map_save.png);
 }
@@ -62,6 +83,10 @@ body {
 
 .icon-measure-area {
    background-image: url(img/geosilk/ruler_square.png) !important;
+}
+
+.x-btn .icon-layer-switcher {
+   background-image: url(img/silk/layers.png);
 }
 
 .x-btn .icon-zoom-in { 
@@ -176,6 +201,13 @@ div.map-overlay div.overlay-element {
 
 .olControlScaleLine {
     font-family: tahoma,arial,helvetica,sans-serif;
+}
+
+.olControlAttribution {
+    bottom: 5px;
+    font-size: 10px;
+    left: 10px;
+    right: inherit;
 }
 
 /* position the zoom slider within map panel */
