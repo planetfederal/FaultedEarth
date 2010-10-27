@@ -1439,7 +1439,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
      */
     displayAppInfo: function() {
         var appInfo = new Ext.Panel({
-            title: "Faulted Earth",
+            title: "GeoEditor",
             html: "<iframe style='border: none; height: 100%; width: 100%' src='about.html' frameborder='0' border='0'><a target='_blank' href='about.html'>About Faulted Earth</a> </iframe>"
         });
 

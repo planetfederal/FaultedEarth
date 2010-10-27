@@ -216,4 +216,10 @@ div.map-overlay div.overlay-element {
     left: 17px
 }
 
+.gx-info-panel {
+    margin: 1em;
+}
 
+.gx-info-panel h2 {
+    margin-top: 1em;
+}
