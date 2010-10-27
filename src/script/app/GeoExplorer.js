@@ -417,20 +417,18 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
             // TODO: remove when http://trac.geoext.org/ticket/305 is fixed
             ,items: []
         });        
-
-        var westPanel = new Ext.Panel({
+        
+        var westPanel = new Ext.TabPanel({
             border: true,
-            layout: "border",
             region: "west",
             width: 250,
             split: true,
-            collapsible: true,
-            collapseMode: "mini",
+            activeTab: 0,
             items: [
                 layersContainer, legendContainer
             ]
         });
-        
+
         this.toolbar = new Ext.Toolbar({
             xtype: "toolbar",
             region: "north",
