@@ -576,7 +576,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                         height: 250,
                         listeners: {
                             "close": function() {
-                                if (feature.layer) {
+                                if (feature.layer && feature.layer.selectedFeatures.indexOf(feature) !== -1) {
                                     selectControl.unselect(feature);
                                 }
                             },
