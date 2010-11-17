@@ -23,6 +23,7 @@
             <filter token="ext-all.js" value="ext-all-debug.js"/>
             <!-- OpenLayers Resources -->
             <filter token="ol-style.css" value="../../externals/openlayers/theme/default/style.css"/>
+            <filter token="ol-img" value="../../externals/openlayers/img/"/>
             <filter token="OpenLayers.js" value="../../externals/openlayers/lib/OpenLayers.js"/>
             <!-- GeoExt Resources -->
             <filter token="geoext-all.css" value="../../externals/geoext/resources/css/geoext-all-debug.css"/>
@@ -90,6 +91,12 @@
             </fileset>
         </copy>
 
+        <copy todir="${build}/img/ol">
+            <fileset dir="${externals}/openlayers/img">
+                <!-- .svn excluded by default -->
+            </fileset>
+        </copy>
+
         <copy todir="${build}/theme/gx">
             <fileset dir="${externals}/geoext/resources">
                 <!-- .svn excluded by default -->
@@ -102,6 +109,7 @@
             <filter token="ext-all.js" value="ext-all.js"/>
             <!-- OpenLayers Resources -->
             <filter token="ol-style.css" value="theme/ol/style.css"/>
+            <filter token="ol-img" value="img/ol/"/>
             <filter token="OpenLayers.js" value="script/OpenLayers.js"/>
             <!-- GeoExt Resources -->
             <filter token="geoext-all.css" value="theme/gx/css/geoext-all-debug.css"/>
