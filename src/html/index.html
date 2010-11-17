@@ -21,9 +21,6 @@
         <link rel="stylesheet" type="text/css" href="@gxtheme-gray.css@" />
         <script type="text/javascript" src="@GeoExt.js@"></script> 
 
-        <!-- TODO: deal with this in a different way -->
-        <script type="text/javascript" src="script/override-ext-ajax.js"></script> 
-
         <!-- gxp resources -->
         <script type="text/javascript" src="@gxp.js@"></script> 
         <link rel="stylesheet" type="text/css" href="@gxp.css@" />
@@ -32,24 +29,47 @@
         <link rel="shortcut icon" href="theme/app/img/favicon.ico"/>
         <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" />
         <!--[if IE]><link rel="stylesheet" type="text/css" href="theme/app/ie.css"/><![endif]-->
-        <script type="text/javascript" src="@GeoExplorer.js@"></script>
-        <script type="text/javascript" src="@ux.js@"></script>
 
         <script>
             OpenLayers.Layer.WMS.prototype.DEFAULT_PARAMS.transparent = true;
             Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
-            OpenLayers.ImgPath = "externals/openlayers/img/";
-            var app = new GeoExplorer({
-                wfs: "/geoserver/wfs",
-                //proxy: "proxy/?url=",
-                alignToGrid: true,
-                about: {
-                    title: "Faulted Earth Demo",
-                    "abstract": "This is a demonstration of Faulted Earth, " +
-                        "an application for editing earthquake related spatial " +
-                        "data.",
-                    contact: "For more information, contact <a href='http://opengeo.org'>OpenGeo</a>."
-                },
+            OpenLayers.ImgPath = "@ol-img@";
+            var app = new gxp.Viewer({
+                mapItems: [{
+                    xtype: "gx_zoomslider",
+                    vertical: true,
+                    height: 100
+                }],
+                portalItems: [{
+                    region: "center",
+                    layout: "border",
+                    tbar: {id: "paneltbar"},
+                    items: [{
+                        title: "Legend",
+                        xtype: "gx_legendpanel",
+                        region: "west",
+                        collapsible: true,
+                        split: true,
+                        collapseMode: "mini",
+                        defaults: {style: {padding: "5px"}},
+                        width: 200
+                    }, "map"]
+                }],
+                tools: [{
+                    actions: [{
+                        text: "Faulted Earth",
+                        iconCls: "icon-geoexplorer",
+                        disabled: true
+                    }],
+                    actionTarget: "paneltbar"
+                }, {
+                    ptype: "gx_featuremanager",
+                    id: "featuremanager"
+                }, {
+                    ptype: "gx_featureeditor",
+                    featureManager: "featuremanager",
+                    autoLoadFeatures: true
+                }],
                 defaultSourceType: "gx_wmssource",
                 sources: {
                     local: {
@@ -71,6 +91,8 @@
                     }
                 },
                 map: {
+                    id: "map",
+                    region: "center",
                     projection: "EPSG:900913",
                     units: "m",
                     maxResolution: 156543.0339,
@@ -91,6 +113,16 @@
                         args: [
                             "None", {visibility: false}
                         ]
+                    }, {
+                        source: "local",
+                        name: "gem:sources"
+                    }, {
+                        source: "local",
+                        name: "gem:faults"
+                    }, {
+                        source: "local",
+                        name: "gem:observed",
+                        selected: true
                     }],
                     center: [0, 0],
                     zoom: 2
