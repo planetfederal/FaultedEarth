@@ -44,33 +44,47 @@
                 portalItems: [{
                     region: "center",
                     layout: "border",
-                    tbar: {id: "paneltbar"},
+                    tbar: {
+                        id: "paneltbar",
+                        items: [{
+                            iconCls: "icon-geoexplorer",
+                            disabled: true
+                        }, "Faulted Earth", "-"]
+                    },
                     items: [{
-                        title: "Legend",
-                        xtype: "gx_legendpanel",
+                        xtype: "tabpanel",
                         region: "west",
+                        width: 200,
                         collapsible: true,
                         split: true,
                         collapseMode: "mini",
-                        defaults: {style: {padding: "5px"}},
-                        width: 200
+                        activeTab: 0,
+                        items: [{
+                            id: "tree",
+                            title: "Layers",
+                            xtype: "container",
+                            layout: "fit"
+                        }, {
+                            title: "Legend",
+                            xtype: "gx_legendpanel",
+                            defaults: {style: {padding: "5px"}},
+                        }]
                     }, "map"]
                 }],
+                
                 tools: [{
-                    actions: [{
-                        text: "Faulted Earth",
-                        iconCls: "icon-geoexplorer",
-                        disabled: true
-                    }],
-                    actionTarget: "paneltbar"
+                    ptype: "gx_layertree",
+                    outputTarget: "tree",
                 }, {
                     ptype: "gx_featuremanager",
                     id: "featuremanager"
                 }, {
                     ptype: "gx_featureeditor",
                     featureManager: "featuremanager",
-                    autoLoadFeatures: true
+                    autoLoadFeatures: true,
+                    actionTarget: "paneltbar"
                 }],
+                
                 defaultSourceType: "gx_wmssource",
                 sources: {
                     local: {
@@ -91,6 +105,7 @@
                         ptype: "gx_olsource"
                     }
                 },
+                
                 map: {
                     id: "map",
                     region: "center",
