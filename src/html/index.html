@@ -34,7 +34,6 @@
             OpenLayers.Layer.WMS.prototype.DEFAULT_PARAMS.transparent = true;
             Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
             OpenLayers.ImgPath = "@ol-img@";
-            Ext.QuickTips.init();
             var app = new gxp.Viewer({
                 mapItems: [{
                     xtype: "gx_zoomslider",
@@ -69,7 +68,16 @@
                             xtype: "gx_legendpanel",
                             defaults: {style: {padding: "5px"}}
                         }]
-                    }, "map"]
+                    }, "map", {
+                        id: "featuregrid",
+                        xtype: "container",
+                        layout: "fit",
+                        region: "south",
+                        height: 200,
+                        collapsible: true,
+                        split: true,
+                        collapseMode: "mini"
+                    }]
                 }],
                 
                 tools: [{
@@ -77,12 +85,16 @@
                     outputTarget: "tree"
                 }, {
                     ptype: "gx_featuremanager",
-                    id: "featuremanager"
+                    id: "featuremanager",
+                    autoLoadFeatures: true
                 }, {
                     ptype: "gx_featureeditor",
                     featureManager: "featuremanager",
-                    autoLoadFeatures: true,
                     actionTarget: "paneltbar"
+                }, {
+                    ptype: "gx_featuregrid",
+                    featureManager: "featuremanager",
+                    outputTarget: "featuregrid"
                 }],
                 
                 defaultSourceType: "gx_wmssource",
