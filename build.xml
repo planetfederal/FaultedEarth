@@ -53,6 +53,9 @@
         <copy file="${src}/html/about.html" todir="${build}">
             <filterset refid="dev-replacements"/>
         </copy>
+        <copy file="${src}/html/form.html" todir="${build}">
+            <filterset refid="dev-replacements"/>
+        </copy>
 
     </target>
     
@@ -127,6 +130,9 @@
             <filterset refid="dist-replacements"/>
         </copy>
         <copy file="${src}/html/about.html" todir="${build}">
+            <filterset refid="dist-replacements"/>
+        </copy>        
+        <copy file="${src}/html/form.html" todir="${build}">
             <filterset refid="dist-replacements"/>
         </copy>        
         
