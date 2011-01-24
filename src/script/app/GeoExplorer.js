@@ -90,7 +90,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 
         this.popupCache = {};
         this.mapItems = [{
-            xtype: "gx_zoomslider",
+            xtype: "gxp_zoomslider",
             vertical: true,
             height: 100,
             plugins: new GeoExt.ZoomSliderTip({
@@ -223,7 +223,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         });
         treeRoot.appendChild(new GeoExt.tree.LayerContainer({
             text: "Overlays",
-            iconCls: "gx-folder",
+            iconCls: "gxp-folder",
             expanded: true,
             loader: new GeoExt.tree.LayerLoader({
                 store: this.mapPanel.layers,
@@ -239,7 +239,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                             return r.get("layer") === layer;
                         }));
                         if (record && !record.get("queryable")) {
-                            attr.iconCls = "gx-tree-rasterlayer-icon";
+                            attr.iconCls = "gxp-tree-rasterlayer-icon";
                         }
                     }
                     return GeoExt.tree.LayerLoader.prototype.createNode.apply(this, [attr]);
@@ -256,7 +256,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
         
         treeRoot.appendChild(new GeoExt.tree.LayerContainer({
             text: "Base Layers",
-            iconCls: "gx-folder",
+            iconCls: "gxp-folder",
             expanded: true,
             group: "background",
             loader: new GeoExt.tree.LayerLoader({
@@ -275,7 +275,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                         }));
                         if (record) {
                             if (!record.get("queryable")) {
-                                attr.iconCls = "gx-tree-rasterlayer-icon";
+                                attr.iconCls = "gxp-tree-rasterlayer-icon";
                             }
                             if (record.get("fixed")) {
                                 attr.allowDrag = false;
@@ -853,7 +853,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
                 "server-added": function(url) {
                     newSourceWindow.setLoading();
                     this.addLayerSource({
-                        config: {url: url}, // assumes default of gx_wmssource
+                        config: {url: url}, // assumes default of gxp_wmssource
                         callback: function(id) {
                             // add to combo and select
                             var record = new sources.recordType({
@@ -1451,7 +1451,7 @@ var GeoExplorer = Ext.extend(gxp.Viewer, {
 
         var mapInfo = new Ext.Panel({
             title: "Map Info",
-            html: '<div class="gx-info-panel">' +
+            html: '<div class="gxp-info-panel">' +
                   '<h2>Title</h2><p>' + about.title +
                   '</p><h2>Description</h2><p>' + about['abstract'] +
                   '</p> <h2>Contact</h2><p>' + about.contact +'</p></div>',

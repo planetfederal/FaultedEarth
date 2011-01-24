@@ -25,11 +25,11 @@ body {
     background-color: #EAEAEA;
 }
 
-.x-tree-node img.gx-folder, .x-tree-node-collapsed img.gx-folder{
+.x-tree-node img.gxp-folder, .x-tree-node-collapsed img.gxp-folder{
     background: url(../../ext/resources/images/default/tree/folder.gif);
 }
  
-.x-tree-node-expanded img.gx-folder {
+.x-tree-node-expanded img.gxp-folder {
     background: url(../../ext/resources/images/default/tree/folder-open.gif);
 }
 
@@ -216,10 +216,10 @@ div.map-overlay div.overlay-element {
     left: 17px
 }
 
-.gx-info-panel {
+.gxp-info-panel {
     margin: 1em;
 }
 
-.gx-info-panel h2 {
+.gxp-info-panel h2 {
     margin-top: 1em;
 }

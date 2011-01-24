@@ -81,24 +81,24 @@
                 }],
                 
                 tools: [{
-                    ptype: "gx_layertree",
+                    ptype: "gxp_layertree",
                     outputTarget: "tree"
                 }, {
-                    ptype: "gx_featuremanager",
+                    ptype: "gxp_featuremanager",
                     id: "featuremanager",
                     autoLoadFeatures: true,
                     format: "JSON"
                 }, {
-                    ptype: "gx_featureeditor",
+                    ptype: "gxp_featureeditor",
                     featureManager: "featuremanager",
                     actionTarget: "paneltbar"
                 }, {
-                    ptype: "gx_featuregrid",
+                    ptype: "gxp_featuregrid",
                     featureManager: "featuremanager",
                     outputTarget: "featuregrid"
                 }],
                 
-                defaultSourceType: "gx_wmssource",
+                defaultSourceType: "gxp_wmssource",
                 sources: {
                     local: {
                         url: "/geoserver/ows",
@@ -106,13 +106,13 @@
                         title: "Local GeoServer"
                     },
                     osm: {
-                        ptype: "gx_osmsource"
+                        ptype: "gxp_osmsource"
                     },
                     google: {
-                        ptype: "gx_googlesource"
+                        ptype: "gxp_googlesource"
                     },
                     ol: {
-                        ptype: "gx_olsource"
+                        ptype: "gxp_olsource"
                     }
                 },
                 

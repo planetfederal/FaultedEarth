@@ -48,7 +48,7 @@
                 height: 260,
                 viewer: {
                     mapItems: [{
-                        xtype: "gx_zoomslider",
+                        xtype: "gxp_zoomslider",
                         vertical: true,
                         height: 100
                     }],
@@ -56,28 +56,28 @@
                     // configuration of all tool plugins for this application
                     tools: [{
                         // shared FeatureManager for feature editing, grid and querying
-                        ptype: "gx_featuremanager",
+                        ptype: "gxp_featuremanager",
                         id: "featuremanager",
                         paging: false
                     }, {
-                        ptype: "gx_featureeditor",
+                        ptype: "gxp_featureeditor",
                         featureManager: "featuremanager",
                         autoLoadFeatures: true,
                         defaultAction: 0,
                         outputConfig: {panIn: false}
                     }, {
-                        ptype: "gx_featuretofield",
+                        ptype: "gxp_featuretofield",
                         featureManager: "featuremanager"
                     }],
 
                     // layer sources
-                    defaultSourceType: "gx_wmssource",
+                    defaultSourceType: "gxp_wmssource",
                     sources: {
                         local: {
                             url: "/geoserver/wms"
                         },
                         osm: {
-                            ptype: "gx_osmsource"
+                            ptype: "gxp_osmsource"
                         }
                     },
 
@@ -129,7 +129,7 @@
                 height: 240,
                 viewer: {
                     mapItems: [{
-                        xtype: "gx_zoomslider",
+                        xtype: "gxp_zoomslider",
                         vertical: true,
                         height: 100
                     }],
@@ -137,11 +137,11 @@
                     // configuration of all tool plugins for this application
                     tools: [{
                         // shared FeatureManager for feature editing, grid and querying
-                        ptype: "gx_featuremanager",
+                        ptype: "gxp_featuremanager",
                         id: "featuremanager",
                         paging: false
                     }, {
-                        ptype: "gx_featureeditor",
+                        ptype: "gxp_featureeditor",
                         featureManager: "featuremanager",
                         readOnly: true,
                         autoLoadFeatures: true,
@@ -149,18 +149,18 @@
                         defaultAction: 1,
                         outputConfig: {panIn: false, height: 220}
                     }, {
-                        ptype: "gx_featuretofield",
+                        ptype: "gxp_featuretofield",
                         featureManager: "featuremanager"
                     }],
 
                     // layer sources
-                    defaultSourceType: "gx_wmssource",
+                    defaultSourceType: "gxp_wmssource",
                     sources: {
                         local: {
                             url: "/geoserver/wms"
                         },
                         osm: {
-                            ptype: "gx_osmsource"
+                            ptype: "gxp_osmsource"
                         }
                     },
 
