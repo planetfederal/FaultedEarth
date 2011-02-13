@@ -10,45 +10,50 @@
         <p id="form"></p>
         
         <!-- Ext resources -->
-        <link rel="stylesheet" type="text/css" href="ext/resources/css/ext-all.css" />
-        <link rel="stylesheet" type="text/css" href="ext/resources/css/xtheme-gray.css" />
-        <script type="text/javascript" src="ext/adapter/ext/ext-base.js"></script>
-        <script type="text/javascript" src="ext/@ext-all.js@"></script>
+        <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css" />
+        <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css" />
+        <script type="text/javascript" src="externals/ext/adapter/ext/ext-base.js"></script>
+        <script type="text/javascript" src="externals/ext/ext-all-debug.js"></script>
 
         <!-- OpenLayers resources -->
-        <link rel="stylesheet" type="text/css" href="@ol-style.css@" />
-        <script type="text/javascript" src="@OpenLayers.js@"></script>
+        <link rel="stylesheet" type="text/css" href="externals/openlayers/theme/default/style.css" />
+        <link rel="stylesheet" type="text/css" href="externals/openlayers/theme/default/google.css" />
+        <script type="text/javascript" src="script/OpenLayers.js"></script>
 
         <!-- GeoExt resources -->
-        <link rel="stylesheet" type="text/css" href="@geoext-all.css@" />
-        <link rel="stylesheet" type="text/css" href="@gxtheme-gray.css@" />
-        <script type="text/javascript" src="@GeoExt.js@"></script> 
+        <link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/popup.css" />
+        <link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/layerlegend.css" />
+        <link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/gxtheme-gray.css" />
+        <script type="text/javascript" src="script/GeoExt.js"></script> 
 
         <!-- gxp resources -->
-        <script type="text/javascript" src="@gxp.js@"></script> 
-        <link rel="stylesheet" type="text/css" href="@gxp.css@" />
+        <script type="text/javascript" src="script/gxp.js"></script> 
+        <link rel="stylesheet" type="text/css" href="externals/gxp/src/theme/all.css" />
 
-        <!-- GeoExplorer resources -->
-        <link rel="shortcut icon" href="theme/app/img/favicon.ico"/>
-        <link rel="stylesheet" type="text/css" href="theme/app/geoexplorer.css" />
-        <!--[if IE]><link rel="stylesheet" type="text/css" href="theme/app/ie.css"/><![endif]-->
+        <!-- app resources -->
+        <link rel="shortcut icon" href="favicon.ico"/>
+        <link rel="stylesheet" type="text/css" href="theme/app/style.css" />
         
         <script type="text/javascript">
+
+        Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
+        OpenLayers.ImgPath = "externals/openlayers/img/";
+
         var source, observation;
         Ext.onReady(function() {
             source = new gxp.form.ViewerField({
                 name: "source",
-                fieldLabel: "Create or select a fault source",
+                fieldLabel: "Select or create a fault source",
                 validator: function(v) {
                     var feature = v && Ext.decode(v);
                     // if the feature was saved, its id will not contain OpenLayers.Feature.Vector
                     return !!feature && feature.id.indexOf("OpenLayers.Feature.Vector") != 0;
                 },
                 width: 400,
-                height: 260,
+                height: 274,
                 viewer: {
                     mapItems: [{
-                        xtype: "gxp_zoomslider",
+                        xtype: "gx_zoomslider",
                         vertical: true,
                         height: 100
                     }],
@@ -63,7 +68,7 @@
                         ptype: "gxp_featureeditor",
                         featureManager: "featuremanager",
                         autoLoadFeatures: true,
-                        defaultAction: 0,
+                        defaultAction: 1,
                         outputConfig: {panIn: false}
                     }, {
                         ptype: "gxp_featuretofield",
@@ -71,13 +76,13 @@
                     }],
 
                     // layer sources
-                    defaultSourceType: "gxp_wmssource",
+                    defaultSourceType: "gxp_wmscsource",
                     sources: {
-                        local: {
-                            url: "/geoserver/wms"
-                        },
                         osm: {
                             ptype: "gxp_osmsource"
+                        },
+                        local: {
+                            url: "/geoserver/wms"
                         }
                     },
 
@@ -97,23 +102,9 @@
                             name: "mapnik",
                             group: "background"
                         }, {
-                            source: "ol",
-                            group: "background",
-                            fixed: true,
-                            type: "OpenLayers.Layer",
-                            args: [
-                                "None", {visibility: false}
-                            ]
-                        }, {
                             source: "local",
                             name: "gem:sources",
                             selected: true
-                        }, {
-                            source: "local",
-                            name: "gem:faults"
-                        }, {
-                            source: "local",
-                            name: "gem:observed",
                         }],
                         center: [0, 0],
                         zoom: 1
@@ -126,10 +117,10 @@
                 fieldLabel: "Select a related observation",
                 allowBlank: false,
                 width: 400,
-                height: 240,
+                height: 248,
                 viewer: {
                     mapItems: [{
-                        xtype: "gxp_zoomslider",
+                        xtype: "gx_zoomslider",
                         vertical: true,
                         height: 100
                     }],
@@ -145,7 +136,7 @@
                         featureManager: "featuremanager",
                         readOnly: true,
                         autoLoadFeatures: true,
-                        actionTarget: null,
+                        actionTarget: false,
                         defaultAction: 1,
                         outputConfig: {panIn: false, height: 220}
                     }, {
@@ -154,13 +145,13 @@
                     }],
 
                     // layer sources
-                    defaultSourceType: "gxp_wmssource",
+                    defaultSourceType: "gxp_wmscsource",
                     sources: {
-                        local: {
-                            url: "/geoserver/wms"
-                        },
                         osm: {
                             ptype: "gxp_osmsource"
+                        },
+                        local: {
+                            url: "/geoserver/wms"
                         }
                     },
 
@@ -179,20 +170,6 @@
                             source: "osm",
                             name: "mapnik",
                             group: "background"
-                        }, {
-                            source: "ol",
-                            group: "background",
-                            fixed: true,
-                            type: "OpenLayers.Layer",
-                            args: [
-                                "None", {visibility: false}
-                            ]
-                        }, {
-                            source: "local",
-                            name: "gem:sources"
-                        }, {
-                            source: "local",
-                            name: "gem:faults"
                         }, {
                             source: "local",
                             name: "gem:observed",
