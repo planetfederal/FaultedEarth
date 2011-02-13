@@ -26,11 +26,11 @@ body {
 }
 
 .x-tree-node img.gxp-folder, .x-tree-node-collapsed img.gxp-folder{
-    background: url(../../ext/resources/images/default/tree/folder.gif);
+    background: url(../../externals/ext/resources/images/default/tree/folder.gif);
 }
  
 .x-tree-node-expanded img.gxp-folder {
-    background: url(../../ext/resources/images/default/tree/folder-open.gif);
+    background: url(../../externals/ext/resources/images/default/tree/folder-open.gif);
 }
 
 .x-btn .icon-geoexplorer {
@@ -147,7 +147,7 @@ div.map-overlay div.overlay-element {
 /* Pan- and Zoom- Panel Styles*/
 
 .olControlPanPanel div {
-    background-image:url(../../ext/resources/images/gray/panel/tool-sprites.gif);
+    background-image:url(../../externals/ext/resources/images/gray/panel/tool-sprites.gif);
     height:15px;
     width:15px;
     /* workaround for button height in IE */
@@ -179,7 +179,7 @@ div.map-overlay div.overlay-element {
 }
 
 .olControlZoomPanel div {
-    background-image:url(../../ext/resources/images/gray/panel/tool-sprites.gif);
+    background-image:url(../../externals/ext/resources/images/gray/panel/tool-sprites.gif);
     height:15px;
     width:15px;
     /* workaround for button height in IE */
@@ -222,4 +222,16 @@ div.map-overlay div.overlay-element {
 
 .gxp-info-panel h2 {
     margin-top: 1em;
+}
+
+/* IE workarounds */
+.ext-ie div.map-overlay {
+    width: 240px;
+}
+.ext-ie .overlay-scalechooser {
+    width: 110px;
+}
+.ext-ie .overlay-scaleline {
+    width: 100px;
+    padding-bottom: 5px;
 }
