@@ -1,6 +1,8 @@
+// TODO: push for something equivalent in Ringo
+
 var {Response} = require("ringo/webapp/response");
 
-var responseForStatus = function(status, msg) {
+exports.responseForStatus = function(status, msg) {
     var response = new Response(msg || codes[status]);
     response.status = status;
     return response;
@@ -54,56 +56,3 @@ var codes = {
     505: "HTTP Version Not Supported",
     507: "Insufficient Storage"
 };
-
-exports.responseForStatus = responseForStatus;
-
-var URLMap = exports.URLMap = function(map, options) {
-    var options = options || { longestMatchFirst : true },
-        mapping = [];
-        
-    for (var location in map) {
-        var app = map[location],
-            host = null,
-            match;
-        
-        if (match = location.match(/^https?:\/\/(.*?)(\/.*)/)) {
-            host = match[1];
-            location = match[2];
-        }
-            
-        if (location.charAt(0) != "/") {
-            throw new Error("paths need to start with / (was: " + location + ")");
-        }
-        
-        mapping.push([host, location.replace(/\/+$/,""), app]);
-    }
-    // if we want to match longest matches first, then sort
-    if (options.longestMatchFirst) {
-        mapping = mapping.sort(function(a, b) {
-            return (b[1].length - a[1].length) || ((b[0]||"").length - (a[0]||"").length);
-        });
-    }
-    
-    return function(env, path) {
-        path = (path || env.pathInfo).replace(/\/+$/,"");
-        var hHost = env.host, sPort = env.port;
-
-        for (var i = 0; i < mapping.length; i++) {
-            var host = mapping[i][0], location = mapping[i][1], app = mapping[i][2];
-
-            if ((host === hHost || (host === null)) &&
-                (location === path.substring(0, location.length)) &&
-                (path.charAt(location.length) === "" || path.charAt(location.length) === "/"))
-            {
-                env = Object.create(env); // make a shallow "copy", since we're modifying SCRIPT_NAME / PATH_INFO
-
-                env.scriptName += location;
-                env.pathInfo = path.substring(location.length);
-
-                return app(env);
-            }
-        }
-
-        throw {notfound: true};
-    }
-}
