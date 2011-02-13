@@ -34,7 +34,7 @@
         
             OpenLayers.Layer.WMS.prototype.DEFAULT_PARAMS.transparent = true;
             Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
-            OpenLayers.ImgPath = "extermals/openlayers/img";
+            OpenLayers.ImgPath = "externals/openlayers/img/";
             
             var app = new gxp.Viewer({
                 
@@ -48,10 +48,7 @@
                     layout: "border",
                     tbar: {
                         id: "paneltbar",
-                        items: [{
-                            iconCls: "icon-geoexplorer",
-                            disabled: true
-                        }, "Faulted Earth", "-"]
+                        items: ["-"]
                     },
                     items: [{
                         xtype: "tabpanel",
@@ -86,6 +83,24 @@
                 }],
                 
                 tools: [{
+                    actionTarget: {target: "paneltbar", index: 0},
+                    outputAction: 0,
+                    outputConfig: {
+                        title: "Faulted Earth",
+                        width: 300,
+                        height: 300,
+                        modal: true,
+                        bodyCfg: {
+                            tag: "iframe",
+                            src: "about.html",
+                            style: {border: 0}
+                        }
+                    },
+                    actions: [{
+                        iconCls: "icon-geoexplorer",
+                        text: "Faulted Earth"
+                    }]
+                },{
                     ptype: "gxp_layertree",
                     outputTarget: "tree"
                 }, {
@@ -104,7 +119,7 @@
                     outputTarget: "featuregrid"
                 }],
                 
-                defaultSourceType: "gxp_wmssource",
+                defaultSourceType: "gxp_wmscsource",
                 sources: {
                     local: {
                         url: "/geoserver/ows",
@@ -137,6 +152,11 @@
                         title: "Google Terrain",
                         name: "TERRAIN",
                         group: "background"
+                    }, {
+                        source: "osm",
+                        name: "mapnik",
+                        group: "background",
+                        visibility: false
                     }, {
                         source: "ol",
                         group: "background",
