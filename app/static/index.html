@@ -115,8 +115,24 @@
                     actionTarget: "paneltbar"
                 }, {
                     ptype: "gxp_featuregrid",
+                    outputConfig: {id: "grid"},
+                    alwaysDisplayOnMap: true,
+                    displayMode: "selected",
                     featureManager: "featuremanager",
                     outputTarget: "featuregrid"
+                }, {
+                    ptype: "gxp_selectedfeatureactions",
+                    featureManager: "featuremanager",
+                    actions: [{
+                        menuText: "Feature context demo",
+                        text: "Feature context demo",
+                        urlTemplate: "/geoserver/wms/reflect?layers={layer}&width=377&height=328&format=application/openlayers&featureid={fid}",
+                    }],
+                    actionTarget: ["grid.contextMenu", "grid.bbar"],
+                    outputConfig: {
+                        width: 410,
+                        height: 410
+                    }                    
                 }],
                 
                 defaultSourceType: "gxp_wmscsource",
