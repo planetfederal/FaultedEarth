@@ -13,30 +13,42 @@ var app = new gxp.Viewer({
                         items: ["-"]
                     },
                     items: [{
-                        xtype: "tabpanel",
+                        id: "west",
                         region: "west",
-                        width: 300,
+                        layout: "accordion",
+                        width: 280,
                         split: true,
+                        collapsible: true,
                         collapseMode: "mini",
-                        activeTab: 0,
+                        header: false,
+                        border: false,
+                        defaults: {
+                           padding: 10,
+                           hideBorders: true,
+                           autoScroll: true
+                    
+                        },
                         items: [{
                             id: "tree",
                             title: "Layers",
-                            xtype: "container",
+                            //xtype: "container",
                         }, /** {
                             title: "Legend",
                             xtype: "gx_legendpanel",
                             defaults: {style: {padding: "5px"}}
                         },*/{
+                            id: 'summary_table',
                             title: "Summary Form",
-                            xtype: "container",
+                            //xtype: "container",
                         },{
-                                title: "Observations",
-                                xtype: "container",
+                            id: 'observations',
+                            title: "Observations",
+                            //xtype: "container",
                             },/**{
                             title: "Fault Source",
                             xtype: "container",
                         },*/]
+                        
                     }, "map", {
                         id: "featuregrid",
                         layout: "fit",
