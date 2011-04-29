@@ -1,6 +1,9 @@
 
 
-
+Ext.onReady(function() {
+    //my page power add hazard data form
+        //example form (place holder)  
+       
  var app = new gxp.Viewer({
         
         mapItems: [{
@@ -18,7 +21,7 @@
             items: [{
                 xtype: "tabpanel",
                 region: "west",
-                width: 200,
+                width: 300,
                 split: true,
                 collapseMode: "mini",
                 activeTab: 0,
@@ -26,12 +29,20 @@
                     id: "tree",
                     title: "Layers",
                     xtype: "container",
-                    layout: "fit"
-                }, {
+                }, /** {
                     title: "Legend",
                     xtype: "gx_legendpanel",
                     defaults: {style: {padding: "5px"}}
-                }]
+                },*/{
+                    title: "Observations",
+                    xtype: "container",
+                },    {
+                    title: "Geometry",
+                    xtype: "container",
+                },/**{
+                    title: "Fault Source",
+                    xtype: "container",
+                },*/]
             }, "map", {
                 id: "featuregrid",
                 layout: "fit",
@@ -44,7 +55,7 @@
         }],
         
         tools: [{
-            actionTarget: {target: "paneltbar", index: 0},
+            actionTarget: {target: "Geometry", index: 0},
             outputAction: 0,
             outputConfig: {
                 title: "Faulted Earth",
@@ -156,4 +167,9 @@
             center: [0, 0],
             zoom: 2
         }
+
     });
+    
+    
+
+});
