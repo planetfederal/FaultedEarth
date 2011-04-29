@@ -32,7 +32,7 @@ var app = new gxp.Viewer({
                             id: "tree",
                             title: "Layers",
                             //xtype: "container",
-                        }, /** {
+                            }, /** {
                             title: "Legend",
                             xtype: "gx_legendpanel",
                             defaults: {style: {padding: "5px"}}
@@ -40,14 +40,15 @@ var app = new gxp.Viewer({
                             id: 'summary_table',
                             title: "Summary Form",
                             //xtype: "container",
-                        },{
+                            },{
                             id: 'observations',
                             title: "Observations",
                             //xtype: "container",
-                            },/**{
-                            title: "Fault Source",
-                            xtype: "container",
-                        },*/]
+                            },{
+                            id: "fault_source",
+                            title: 'Fault Section'
+                            },
+                        ]
                         
                     }, "map", {
                         id: "featuregrid",
