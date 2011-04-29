@@ -34,12 +34,12 @@ Ext.onReady(function() {
                     xtype: "gx_legendpanel",
                     defaults: {style: {padding: "5px"}}
                 },*/{
-                    title: "Observations",
+                    title: "Summary Form",
                     xtype: "container",
-                },    {
-                    title: "Geometry",
-                    xtype: "container",
-                },/**{
+                },{
+                        title: "Observations",
+                        xtype: "container",
+                    },/**{
                     title: "Fault Source",
                     xtype: "container",
                 },*/]
