@@ -6,8 +6,9 @@
     </description>
 
     <property name="build" location="build"/>
-    <property name="app.proxy.geoserver" value="http://gem.demo.opengeo.org/geoserver"/>
+    <property name="app.proxy.geoserver" value="http://184.106.119.223/geoserver-geonode-dev/"/>
     <property name="app.port" value="8080"/>
+    <property name="app.deploy.geoserver" value="/geoserver-geonode-dev/"/>
 
     <target name="init">
 
@@ -104,7 +105,16 @@
         </java>
     </target>
 
-    <target name="static-war" depends="dist">
+    <target name="cleanstatic">
+        <delete dir="${build}/${ant.project.name}/WEB-INF/app/static"/>
+    </target>
+
+    <target name="replace">
+        <replace file="${build}/${ant.project.name}/WEB-INF/app/static/index.html" token='"/geoserver/' value='"${app.deploy.geoserver}'/>
+        <replace file="${build}/${ant.project.name}/WEB-INF/app/static/theme/app/style.css" token='(/geoserver/' value='(${app.deploy.geoserver}'/>
+    </target>
+
+    <target name="static-war" depends="cleanstatic, dist, replace">
         <war destfile="${build}/${ant.project.name}.war" needxmlfile="false">
             <fileset dir="${build}/${ant.project.name}/WEB-INF/app/static"/>
         </war>

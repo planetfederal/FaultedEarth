@@ -147,7 +147,7 @@ div.map-overlay div.overlay-element {
 /* Pan- and Zoom- Panel Styles*/
 
 .olControlPanPanel div {
-    background-image:url(../../externals/ext/resources/images/gray/panel/tool-sprites.gif);
+    background-image:url(../../externals/ext/resources/images/default/panel/tool-sprites.gif);
     height:15px;
     width:15px;
     /* workaround for button height in IE */
@@ -179,7 +179,7 @@ div.map-overlay div.overlay-element {
 }
 
 .olControlZoomPanel div {
-    background-image:url(../../externals/ext/resources/images/gray/panel/tool-sprites.gif);
+    background-image:url(../../externals/ext/resources/images/default/panel/tool-sprites.gif);
     height:15px;
     width:15px;
     /* workaround for button height in IE */
@@ -207,7 +207,8 @@ div.map-overlay div.overlay-element {
     bottom: 5px;
     font-size: 10px;
     left: 10px;
-    right: inherit;
+    right: 4px;
+    left: inherit;
 }
 
 /* position the zoom slider within map panel */

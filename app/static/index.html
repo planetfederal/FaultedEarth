@@ -1,136 +1,43 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html>
     <head>
         <title>FaultedEarth</title>
         
         <!-- IE 8 Compatibility -->
-        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+        <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
         
         <!-- Ext resources -->
-        <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css" />
-        <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/xtheme-gray.css" />
+        <link rel="stylesheet" type="text/css" href="externals/ext/resources/css/ext-all.css">
         <script type="text/javascript" src="externals/ext/adapter/ext/ext-base.js"></script>
         <script type="text/javascript" src="externals/ext/ext-all.js"></script>
 
         <!-- OpenLayers resources -->
-        <link rel="stylesheet" type="text/css" href="externals/openlayers/theme/default/style.css" />
+        <link rel="stylesheet" type="text/css" href="externals/openlayers/theme/default/style.css">
         <script type="text/javascript" src="script/OpenLayers.js"></script>
 
         <!-- GeoExt resources -->
-        <link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/popup.css" />
-        <link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/layerlegend.css" />
-        <link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/gxtheme-gray.css" />
+        <link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/popup.css">
+        <link rel="stylesheet" type="text/css" href="externals/geoext/resources/css/layerlegend.css">
         <script type="text/javascript" src="script/GeoExt.js"></script> 
 
         <!-- gxp resources -->
         <script type="text/javascript" src="script/gxp.js"></script> 
-        <link rel="stylesheet" type="text/css" href="externals/gxp/src/theme/all.css" />
+        <link rel="stylesheet" type="text/css" href="externals/gxp/src/theme/all.css">
 
         <!-- app resources -->
-        <link rel="shortcut icon" href="favicon.ico"/>
-        <link rel="stylesheet" type="text/css" href="theme/app/style.css" />
+        <link rel="shortcut icon" href="favicon.ico">
+        <link rel="stylesheet" type="text/css" href="theme/app/style.css">
+        <script type="text/javascript" src="script/app.js"></script>
 
         <script>
         
+            OpenLayers.Layer.Google.v3.animationEnabled = false;
             OpenLayers.Layer.WMS.prototype.DEFAULT_PARAMS.transparent = true;
             Ext.BLANK_IMAGE_URL = "theme/app/img/blank.gif";
             OpenLayers.ImgPath = "externals/openlayers/img/";
             
-            var app = new gxp.Viewer({
-                
-                mapItems: [{
-                    xtype: "gx_zoomslider",
-                    vertical: true,
-                    height: 100
-                }],
-                portalItems: [{
-                    region: "center",
-                    layout: "border",
-                    tbar: {
-                        id: "paneltbar",
-                        items: ["-"]
-                    },
-                    items: [{
-                        xtype: "tabpanel",
-                        region: "west",
-                        width: 200,
-                        split: true,
-                        collapseMode: "mini",
-                        activeTab: 0,
-                        items: [{
-                            id: "tree",
-                            title: "Layers",
-                            xtype: "container",
-                            layout: "fit"
-                        }, {
-                            title: "Legend",
-                            xtype: "gx_legendpanel",
-                            defaults: {style: {padding: "5px"}}
-                        }]
-                    }, "map", {
-                        id: "featuregrid",
-                        layout: "fit",
-                        region: "south",
-                        border: false,
-                        height: 200,
-                        split: true,
-                        collapseMode: "mini"
-                    }]
-                }],
-                
-                tools: [{
-                    actionTarget: {target: "paneltbar", index: 0},
-                    outputAction: 0,
-                    outputConfig: {
-                        title: "Faulted Earth",
-                        width: 300,
-                        height: 300,
-                        modal: true,
-                        bodyCfg: {
-                            tag: "iframe",
-                            src: "about.html",
-                            style: {border: 0}
-                        }
-                    },
-                    actions: [{
-                        iconCls: "icon-geoexplorer",
-                        text: "Faulted Earth"
-                    }]
-                },{
-                    ptype: "gxp_layertree",
-                    outputTarget: "tree"
-                }, {
-                    ptype: "gxp_featuremanager",
-                    id: "featuremanager",
-                    autoLoadFeatures: true,
-                    maxFeatures: 50,
-                    format: "JSON"
-                }, {
-                    ptype: "gxp_featureeditor",
-                    featureManager: "featuremanager",
-                    actionTarget: "paneltbar"
-                }, {
-                    ptype: "gxp_featuregrid",
-                    outputConfig: {id: "grid"},
-                    alwaysDisplayOnMap: true,
-                    displayMode: "selected",
-                    featureManager: "featuremanager",
-                    outputTarget: "featuregrid"
-                }, {
-                    ptype: "gxp_selectedfeatureactions",
-                    featureManager: "featuremanager",
-                    actions: [{
-                        menuText: "Feature context demo",
-                        text: "Feature context demo",
-                        urlTemplate: "/geoserver/wms/reflect?layers={layer}&width=377&height=328&format=application/openlayers&featureid={fid}"
-                    }],
-                    actionTarget: ["grid.contextMenu", "grid.bbar"],
-                    outputConfig: {
-                        width: 410,
-                        height: 410
-                    }                    
-                }],
-                
+            var app = new FaultedEarth({
+                                
                 defaultSourceType: "gxp_wmscsource",
                 sources: {
                     local: {
@@ -179,13 +86,13 @@
                         ]
                     }, {
                         source: "local",
-                        name: "gem:sources"
+                        name: "geonode:sources"
                     }, {
                         source: "local",
-                        name: "gem:faults"
+                        name: "geonode:faults"
                     }, {
                         source: "local",
-                        name: "gem:observed",
+                        name: "geonode:observed",
                         selected: true
                     }],
                     center: [0, 0],
