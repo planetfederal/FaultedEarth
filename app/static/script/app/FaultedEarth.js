@@ -1,9 +1,8 @@
 FaultedEarth = Ext.extend(gxp.Viewer, {
-    
     constructor: function(config) {        
         Ext.applyIf(config, {
             proxy: "/proxy?url=",
-
+                
             mapItems: [{
                 xtype: "gx_zoomslider",
                 vertical: true,
@@ -17,22 +16,35 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                     items: ["-"]
                 },
                 items: [{
-                    xtype: "tabpanel",
+                    id: "west",
                     region: "west",
-                    width: 200,
+                    layout: "accordion",
+                    width: 280,
                     split: true,
+                    collapsible: true,
                     collapseMode: "mini",
-                    activeTab: 0,
+                    header: false,
+                    border: false,
+                    defaults: {
+                       padding: 10,
+                       hideBorders: true,
+                       autoScroll: true
+                
+                    },
                     items: [{
                         id: "tree",
                         title: "Layers",
-                        xtype: "container",
-                        layout: "fit"
+                        padding: null
                     }, {
-                        title: "Legend",
-                        xtype: "gx_legendpanel",
-                        defaults: {style: {padding: "5px"}}
-                    }]
+                        id: 'summary_table',
+                        title: "Summary Form"
+                    }, {
+                        id: 'observations',
+                        title: "Observations"
+                    }, {
+                        id: "fault_source",
+                        title: "Fault Section"
+                    }]                    
                 }, "map", {
                     id: "featuregrid",
                     layout: "fit",
@@ -43,7 +55,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                     collapseMode: "mini"
                 }]
             }],
-
+            
             tools: [{
                 actionTarget: {target: "paneltbar", index: 0},
                 outputAction: 0,
@@ -95,10 +107,71 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                     width: 410,
                     height: 410
                 }                    
-            }]
+            }],
+            
+            defaultSourceType: "gxp_wmscsource",
+            sources: {
+                local: {
+                    url: "/geoserver/ows",
+                    version: "1.1.1",
+                    title: "Local GeoServer"
+                },
+                osm: {
+                    ptype: "gxp_osmsource"
+                },
+                google: {
+                    ptype: "gxp_googlesource"
+                },
+                ol: {
+                    ptype: "gxp_olsource"
+                }
+            },
+            
+            map: {
+                id: "map",
+                region: "center",
+                projection: "EPSG:900913",
+                units: "m",
+                maxResolution: 156543.0339,
+                maxExtent: [
+                    -20037508.34, -20037508.34,
+                    20037508.34, 20037508.34
+                ],
+                layers: [{
+                    source: "google",
+                    title: "Google Terrain",
+                    name: "TERRAIN",
+                    group: "background"
+                }, {
+                    source: "osm",
+                    name: "mapnik",
+                    group: "background",
+                    visibility: false
+                }, {
+                    source: "ol",
+                    group: "background",
+                    fixed: true,
+                    type: "OpenLayers.Layer",
+                    args: [
+                        "None", {visibility: false}
+                    ]
+                }, {
+                    source: "local",
+                    name: "gem:sources"
+                }, {
+                    source: "local",
+                    name: "gem:faults"
+                }, {
+                    source: "local",
+                    name: "gem:observed",
+                    selected: true
+                }],
+                center: [0, 0],
+                zoom: 2
+            }
         });
-        
+
         FaultedEarth.superclass.constructor.apply(this, arguments);
     }
-    
+
 });
