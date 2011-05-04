@@ -35,7 +35,7 @@ To create a static war servlet run the following:
 
     ant static-war
 
-The servlet will be assembled in the build directory.
+The servlet `FaultedEarth.war` will be assembled in the `build` directory.
 
 To use a different path for the local GeoServer than `/geoserver-geonode-dev/`,
 you can add the following option to the `ant static-war` command:
@@ -43,4 +43,3 @@ you can add the following option to the `ant static-war` command:
     -Dapp.deploy.geoserver=<geoserver_path>
 
 where <geoserver_path> is e.g. `/geoserver/`
-
