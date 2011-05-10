@@ -40,8 +40,14 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                         title: "Summary Form"
                     }, {
                         id: 'observations',
-                        title: "Observations"
-                    }, //{
+                        title: "Observations",
+                        padding: null,
+                        bodyCfg: {
+                            tag: "iframe",
+                            src: "/observations/obsform/",
+                            style: {border: "0px none"}
+                        }
+                    }//, {
                         //id: "fault_source",
                         //title: "Fault Section"
                     //}

@@ -24,6 +24,19 @@ if (java.lang.System.getProperty("app.debug")) {
             [(/^\/geoserver\/(.*)/), require("./proxy").pass({url: geoserver, preserveHost: true})]
         );
     }
+
+    // proxy a remote geoserver on /observations by setting proxy.observations to remote URL
+    // only recommended for debug mode
+    var observations = java.lang.System.getProperty("app.proxy.observations");
+    if (observations) {
+        if (observations.charAt(observations.length-1) !== "/") {
+            observations = observations + "/";
+        }
+        // debug specific proxy
+        urls.push(
+            [(/^\/observations\/(.*)/), require("./proxy").pass({url: observations, preserveHost: false})]
+        );
+    }
 }
 
 exports.urls = urls;

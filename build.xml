@@ -7,6 +7,7 @@
 
     <property name="build" location="build"/>
     <property name="app.proxy.geoserver" value="http://184.106.119.223/geoserver-geonode-dev/"/>
+    <property name="app.proxy.observations" value="http://184.106.119.223/observations/"/>
     <property name="app.port" value="8080"/>
     <property name="app.deploy.geoserver" value="/geoserver-geonode-dev/"/>
 
@@ -99,6 +100,7 @@
     <target name="debug">
         <java jar="${build}/ringo/run.jar" fork="true">
             <sysproperty key="app.proxy.geoserver" value="${app.proxy.geoserver}"/>
+            <sysproperty key="app.proxy.observations" value="${app.proxy.observations}"/>
             <sysproperty key="ringo.home" path="${build}/ringo"/>
             <arg path="app/main.js"/>
             <arg line="-p ${app.port}"/>
