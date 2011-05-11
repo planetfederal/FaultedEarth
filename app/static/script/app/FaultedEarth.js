@@ -1,5 +1,10 @@
 FaultedEarth = Ext.extend(gxp.Viewer, {
-    constructor: function(config) {        
+    constructor: function(config) {
+        
+        function adjustIframeSize(cmp) {
+            cmp.body.setWidth(cmp.ownerCt.getWidth());
+        }
+        
         Ext.applyIf(config, {
             proxy: "/proxy?url=",
                 
@@ -34,18 +39,22 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                     items: [{
                         id: "tree",
                         title: "Layers",
-                        padding: null
+                        padding: 0
                     }, {
                         id: 'summary_table',
                         title: "Summary Form"
                     }, {
                         id: 'observations',
                         title: "Observations",
-                        padding: null,
+                        padding: 0,
                         bodyCfg: {
                             tag: "iframe",
                             src: "/observations/obsform/",
                             style: {border: "0px none"}
+                        },
+                        listeners: {
+                            "resize": adjustIframeSize,
+                            "afterlayout": adjustIframeSize
                         }
                     }//, {
                         //id: "fault_source",
