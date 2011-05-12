@@ -171,15 +171,9 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                     args: [
                         "None", {visibility: false}
                     ]
-                }, {
+                },{
                     source: "local",
-                    name: "gem:sources"
-                }, {
-                    source: "local",
-                    name: "gem:faults"
-                }, {
-                    source: "local",
-                    name: "gem:observed",
+                    name: "gem:fault summary",
                     selected: true
                 }],
                 center: [0, 0],
