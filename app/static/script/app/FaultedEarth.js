@@ -123,62 +123,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                     width: 410,
                     height: 410
                 }                    
-            }],
-            
-            defaultSourceType: "gxp_wmscsource",
-            sources: {
-                local: {
-                    url: "/geoserver/ows",
-                    version: "1.1.1",
-                    title: "Local GeoServer"
-                },
-                osm: {
-                    ptype: "gxp_osmsource"
-                },
-                google: {
-                    ptype: "gxp_googlesource"
-                },
-                ol: {
-                    ptype: "gxp_olsource"
-                }
-            },
-            
-            map: {
-                id: "map",
-                region: "center",
-                projection: "EPSG:900913",
-                units: "m",
-                maxResolution: 156543.0339,
-                maxExtent: [
-                    -20037508.34, -20037508.34,
-                    20037508.34, 20037508.34
-                ],
-                layers: [{
-                    source: "google",
-                    title: "Google Terrain",
-                    name: "TERRAIN",
-                    group: "background"
-                }, {
-                    source: "osm",
-                    name: "mapnik",
-                    group: "background",
-                    visibility: false
-                }, {
-                    source: "ol",
-                    group: "background",
-                    fixed: true,
-                    type: "OpenLayers.Layer",
-                    args: [
-                        "None", {visibility: false}
-                    ]
-                },{
-                    source: "local",
-                    name: "gem:fault summary",
-                    selected: true
-                }],
-                center: [0, 0],
-                zoom: 2
-            }
+            }]
         });
 
         FaultedEarth.superclass.constructor.apply(this, arguments);
