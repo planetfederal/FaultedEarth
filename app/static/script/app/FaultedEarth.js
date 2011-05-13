@@ -102,7 +102,48 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
             }, {
                 ptype: "gxp_featureeditor",
                 featureManager: "featuremanager",
-                actionTarget: "paneltbar"
+                actionTarget: "paneltbar",
+                outputConfig: {
+                    defaults: {
+                        propertyNames: {
+                            // custom fied names for the fault summary table
+                            "name": "Name",
+                            "is_episodi": "Episodic behaviour",
+                            "length": "Length",
+                            "u_sm_d_min": "Upper seismogenic depth min",
+                            "u_sm_d_max": "Upper seismogenic depth max",
+                            "u_sm_d_pre": "Upper seismogenic depth pref",
+                            "low_d_min": "Lower seismogenic depth min",
+                            "low_d_max": "Lower seismogenic depth max",
+                            "low_d_pref": "Lower seismogenic depth pref",
+                            "strike": "Strike",
+                            "dip_min": "Dip min",
+                            "dip_max": "Dip max",
+                            "dip_pref": "Dip pref",
+                            "dip_dir": "Dip direction",
+                            "down_thro": "Downthrow side",
+                            "slip_typ": "Slip type",
+                            "slip_r_min": "Slip rate min",
+                            "slip_r_max": "Slip rate max",
+                            "slip_r_pre": "Slip rate pref",
+                            "aseis_slip": " Aseismic-slip factor",
+                            "dis_min": "Displacement min",
+                            "dis_max": "Displacement max",
+                            "dis_pref": "Displacement pref",
+                            "re_int_min": "Recurrence interval min",
+                            "re_int_max": "Recurrence interval max",
+                            "re_int_pre": "Recurrence interval pref",
+                            "mov_min": "Age of last movement min",
+                            "mov_max": "Age of last movement max",
+                            "mov_pref": "Age of last movement pref",
+                            "completene": "Data completeness",
+                            "compiler": "Compiled by",
+                            "created": "Contributed by",
+                            "modified": "Last updated",
+
+                        }
+                    }
+                },
             }, {
                 ptype: "gxp_featuregrid",
                 outputConfig: {id: "grid"},
