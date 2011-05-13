@@ -1,6 +1,8 @@
 FaultedEarth = Ext.extend(gxp.Viewer, {
     constructor: function(config) {
         
+        Ext.Window.prototype.shadow = false;
+        
         function adjustIframeSize(cmp) {
             cmp.body.setWidth(cmp.ownerCt.getWidth());
         }
@@ -41,7 +43,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                         title: "Layers",
                         padding: 0
                     }, {
-                        id: 'summary_table',
+                        id: 'summary',
                         title: "Summary Form"
                     }, {
                         id: 'observations',
@@ -100,9 +102,15 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                 maxFeatures: 50,
                 format: "JSON"
             }, {
+                ptype: "app_summaryform",
+                id: "summaryform",
+                outputTarget: "summary"
+            }, {
                 ptype: "gxp_featureeditor",
                 featureManager: "featuremanager",
-                actionTarget: "paneltbar",
+                actionTarget: "summaryform_tooltarget",
+                createFeatureActionText: "Draw",
+                editFeatureActionText: "Modify",
                 outputConfig: {
                     defaults: {
                         propertyNames: {
@@ -139,11 +147,10 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                             "completene": "Data completeness",
                             "compiler": "Compiled by",
                             "created": "Contributed by",
-                            "modified": "Last updated",
-
+                            "modified": "Last updated"
                         }
                     }
-                },
+                }
             }, {
                 ptype: "gxp_featuregrid",
                 outputConfig: {id: "grid"},

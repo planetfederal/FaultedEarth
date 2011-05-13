@@ -236,3 +236,12 @@ div.map-overlay div.overlay-element {
     width: 100px;
     padding-bottom: 5px;
 }
+
+
+/* FaultedEarth application styles */
+.toolbar-spaced .x-btn {
+    margin-right: 5px;
+}
+.x-btn .icon-import { 
+    background-image: url(img/silk/page_white_world.png);
+}
