@@ -245,3 +245,7 @@ div.map-overlay div.overlay-element {
 .x-btn .icon-import { 
     background-image: url(img/silk/page_white_world.png);
 }
+p.x-form-item {
+    padding-top: .5em;
+    padding-bottom: .5em;
+}

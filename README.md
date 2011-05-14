@@ -6,14 +6,9 @@ Developed by [OpenGeo](http://opengeo.org/) in support of the [Global Earthquake
 
 ## Prerequisites
 
-The application is designed to run against GeoNode, with the Importer module
-installed on GeoServer. This module is available at
-http://suite.opengeo.org/builds/tags/2.4.1/opengeosuite-cloud-tags-2.4.1-latest-importer.zip.
-It consists of two jar files that need to be dropped into the `WEB-INF/lib`
-directory of the GeoServer servlet, e.g.
-`/var/lib/tomcat6/webapps/geoserver-geonode-dev/WEB-INF/lib`. Another dependency,
-the Restlet File Upload Extension (http://maven.restlet.org/org/restlet/org.restlet.ext.fileupload/1.0.8/org.restlet.ext.fileupload-1.0.8.jar),
-needs to be placed in the same directory.
+File uploads go into a temporary workspace on GeoServer. To make this work,
+GeoServer needs to be configured with a workspace named "temp" and a namespace
+uri of http://geonode.org/temporary.
 
 ## Development
 

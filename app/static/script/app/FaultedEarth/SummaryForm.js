@@ -13,6 +13,18 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
     /** api: config[featureEditor]
      *  ``String`` id of the FeatureEditor to modify uploaded features
      */
+    
+    /** api: config[temporaryWorkspace]
+     *  ``String`` temporary GeoServer workspace for shapefile uploads.
+     *  Default is "temp".
+     */
+    temporaryWorkspace: "temp",
+
+    /** api: config[temporaryWorkspaceNamespaceUri]
+     *  ``String`` namespace uri of the temporary GeoServer workspace for
+     *  shapefile uploads. Default is "http://geonode.org/temporary".
+     */
+    temporaryWorkspaceNamespaceUri: "http://geonode.org/temporary",
 
     addOutput: function(config) {
         return FaultedEarth.SummaryForm.superclass.addOutput.call(this, {
@@ -43,34 +55,7 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
                     iconCls: "icon-import",
                     handler: function() {
                         var featureManager = this.target.tools[this.featureManager];
-                        featureManager.on("clearfeatures", function() {
-                            //TODO use a suitable GeoNode uploader instead,
-                            // once it is available
-                            var uploadWindow = new Ext.Window({
-                                title: "Import Faults",
-                                width: 300,
-                                modal: true,
-                                autoHeight: true,
-                                items: [{
-                                    xtype: "gxp_layeruploadpanel",
-                                    ref: "uploadPanel",
-                                    border: false,
-                                    padding: 10,
-                                    url: this.target.localGeoServerUrl + "rest",
-                                    store: "",
-                                    workspace: "geonode",
-                                    autoHeight: true,
-                                    listeners: {
-                                        "uploadcomplete": this.handleUpload,
-                                        scope: this
-                                    }
-                                }]
-                            });
-                            // hide title and abstract fields
-                            uploadWindow.uploadPanel.items.get(0).hide();
-                            uploadWindow.uploadPanel.items.get(1).hide();
-                            uploadWindow.show();
-                        }, this, {single: true});
+                        featureManager.on("clearfeatures", this.showUploadWindow, this, {single: true});
                         featureManager.clearFeatures();
                     },
                     scope: this
@@ -79,14 +64,79 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
         });
     },
     
-    handleUpload: function(panel, details) {
-        panel.ownerCt.close();
+    showUploadWindow: function() {
+        var uploadWindow = new Ext.Window({
+            title: "Import Faults",
+            width: 250,
+            autoHeight: true,
+            modal: true,
+            items: [{
+                xtype: "form",
+                ref: "form",
+                padding: 10,
+                border: false,
+                autoHeight: true,
+                labelWidth: 40,
+                defaults: {
+                    anchor: "100%"
+                },
+                items: [{
+                    xtype: "box",
+                    autoEl: {
+                        tag: "p",
+                        cls: "x-form-item"
+                    },
+                    html: "<b>Select a zipped shapefile for uploading.</b> The shapefile needs to have a line geometry."
+                }, {
+                    xtype: "fileuploadfield",
+                    ref: "fileField",
+                    fieldLabel: "File",
+                    allowBlank: false,
+                    listeners: {
+                        "fileselected": function(field, file) {
+                            field.ownerCt.uploadButton.enable();
+                        }
+                    }
+                }],
+                buttonAlign: "center",
+                buttons: [{
+                    text: "Upload",
+                    ref: "../uploadButton",
+                    disabled: true,
+                    handler: function() {
+                        var file = uploadWindow.form.fileField.fileInput.dom.files[0];
+                        Ext.Ajax.request({
+                            method: "PUT",
+                            url: this.target.localGeoServerUrl + "rest/workspaces/" +
+                                this.temporaryWorkspace + "/datastores/" +
+                                file.fileName + "/file.shp?update=overwrite",
+                            xmlData: file,
+                            headers: {
+                                "Content-type": file.type
+                            },
+                            success: this.handleUpload.createDelegate(this,
+                                [file.fileName, uploadWindow], true),
+                            scope: this
+                        });
+                    },
+                    scope: this
+                }]
+            }]
+        });
+        uploadWindow.show();
+    },
+
+    handleUpload: function(response, options, fileName, uploadWindow) {
+        uploadWindow.close();
+        var fileParts = fileName.split(".");
+        fileParts.pop();
+        var layerName = fileParts.join("");
         new OpenLayers.Protocol.WFS({
             version: "1.1.0",
             srsName: this.target.mapPanel.map.getProjectionObject().getCode(),
             url: this.target.localGeoServerUrl + "wfs",
-            featureType: details.layers[0].name.split(":").pop(),
-            featureNS: "http://geonode.org/",
+            featureType: layerName,
+            featureNS: this.temporaryWorkspaceNamespaceUri,
             outputFormat: "GML2"
         }).read({
             callback: function(response) {
