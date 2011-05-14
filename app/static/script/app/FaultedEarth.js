@@ -104,9 +104,12 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
             }, {
                 ptype: "app_summaryform",
                 id: "summaryform",
+                featureManager: "featuremanager",
+                featureEditor: "featureeditor",
                 outputTarget: "summary"
             }, {
                 ptype: "gxp_featureeditor",
+                id: "featureeditor",
                 featureManager: "featuremanager",
                 actionTarget: "summaryform_tooltarget",
                 createFeatureActionText: "Draw",
