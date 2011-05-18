@@ -137,8 +137,8 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                 ptype: "gxp_featuremanager",
                 id: "featuremanager",
                 autoLoadFeatures: true,
-                maxFeatures: 50,
-                format: "JSON"
+                autoSetLayer: false,
+                maxFeatures: 50
             }, {
                 ptype: "app_summaryform",
                 id: "summaryform",

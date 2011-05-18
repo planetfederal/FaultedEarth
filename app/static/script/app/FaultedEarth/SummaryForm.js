@@ -25,7 +25,19 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
      *  shapefile uploads. Default is "http://geonode.org/temporary".
      */
     temporaryWorkspaceNamespaceUri: "http://geonode.org/temporary",
-
+    
+    /** private: property[sessionFids]
+     *  ``Array`` fids of features added/modified in this session
+     */
+    sessionFids: null,
+    
+    autoActivate: false,
+    
+    constructor: function(config) {
+        FaultedEarth.SummaryForm.superclass.constructor.apply(this, arguments);
+        this.sessionFids = [];
+    },
+    
     addOutput: function(config) {
         return FaultedEarth.SummaryForm.superclass.addOutput.call(this, {
             xtype: "form",
@@ -60,8 +72,83 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
                     },
                     scope: this
                 }]
-            }]
+            }, {
+                xtype: "box",
+                autoEl: {
+                    tag: "p",
+                    cls: "x-form-item"
+                },
+                html: "To add observations, <b>select a fault in the grid</b> at the bottom of the page."
+            }, {
+                xtype: "checkbox",
+                ref: "newFeaturesCheckbox",
+                hideLabel: true,
+                boxLabel: "Only show grid rows from this session",
+                handler: function(checkbox, checked) {
+                    var filter;
+                    if (checked) {
+                        filter = new OpenLayers.Filter.FeatureId({
+                            fids: this.sessionFids
+                        });
+                    }
+                    this.target.tools[this.featureManager].loadFeatures(filter);
+                },
+                scope: this
+            }],
+            listeners: {
+                "added": function(cmp, ct) {
+                    ct.on({
+                        "expand": function() { this.activate(); },
+                        "collapse": function() { this.deactivate(); },
+                        scope: this
+                    });
+                },
+                scope: this
+            }
         });
+    },
+    
+    activate: function() {
+        if (FaultedEarth.SummaryForm.superclass.activate.apply(this, arguments)) {
+            var featureManager = this.target.tools[this.featureManager];
+            featureManager.setLayer();
+            if (!this.layerRecord) {
+                this.target.createLayerRecord({
+                    name: "geonode:fault_summary",
+                    source: "local"
+                }, function(record) {
+                    this.layerRecord = record;
+                    featureManager.setLayer(record);
+                }, this);
+            } else {
+                featureManager.setLayer(this.layerRecord);
+            }
+            this.output[0].newFeaturesCheckbox.setValue(false);
+            featureManager.on("layerchange", function(mgr, rec) {
+                mgr.featureStore.on("save", function(store, batch, data) {
+                    var fid;
+                    for (var action in data) {
+                        for (var i=data[action].length-1; i>=0; --i) {
+                            fid = data[action].feature.fid;
+                            this.sessionFids.remove(fid);  
+                            if (action != "destroy") {
+                                this.sessionFids.push(fid);
+                            }
+                        }
+                    }
+                }, this);
+            }, this, {single: true});
+        }
+    },
+    
+    deactivate: function() {
+        if (FaultedEarth.SummaryForm.superclass.deactivate.apply(this, arguments)) {
+            this.target.tools[this.featureManager].featureStore.un("save", this.monitorSave, this);
+        }
+    },
+    
+    monitorSave: function(store, batch, data) {
+        console.log(data);
     },
     
     showUploadWindow: function() {
