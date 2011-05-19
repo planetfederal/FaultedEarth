@@ -67,8 +67,12 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
                     iconCls: "icon-import",
                     handler: function() {
                         var featureManager = this.target.tools[this.featureManager];
-                        featureManager.on("clearfeatures", this.showUploadWindow, this, {single: true});
-                        featureManager.clearFeatures();
+                        if (this.output[0].newFeaturesCheckbox.getValue()) {
+                            featureManager.on("clearfeatures", this.showUploadWindow, this, {single: true});
+                            featureManager.clearFeatures();
+                        } else {
+                            this.showUploadWindow();
+                        }
                     },
                     scope: this
                 }]
@@ -78,7 +82,11 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
                     tag: "p",
                     cls: "x-form-item"
                 },
-                html: "To add observations, <b>select a fault in the grid</b> at the bottom of the page."
+                html: "<b>Select a fault in the grid</b> at the bottom of the page to <b>add observations</b>. Filter the grid with the options below."
+            }, {
+                xtype: "textfield",
+                ref: "nameContains",
+                fieldLabel: "Name contains"
             }, {
                 xtype: "checkbox",
                 ref: "newFeaturesCheckbox",
