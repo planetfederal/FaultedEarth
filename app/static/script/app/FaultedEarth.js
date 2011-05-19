@@ -125,7 +125,8 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                 id: "featuremanager",
                 autoLoadFeatures: true,
                 autoSetLayer: false,
-                maxFeatures: 50
+                paging: false,
+                maxFeatures: 100
             }, {
                 ptype: "app_summaryform",
                 id: "summaryform",
