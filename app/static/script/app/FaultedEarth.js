@@ -3,10 +3,6 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
         
         Ext.Window.prototype.shadow = false;
         
-        function adjustIframeSize(cmp) {
-            cmp.body.setWidth(cmp.ownerCt.getWidth());
-        }
-        
         // property names for FeatureEditor and FeatureGrid
         var propertyNames = {
             // custom fied names for the fault summary table
@@ -71,31 +67,22 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                     header: false,
                     border: false,
                     defaults: {
-                       padding: 10,
                        hideBorders: true,
                        autoScroll: true
                 
                     },
                     items: [{
                         id: "tree",
-                        title: "Layers",
-                        padding: 0
+                        title: "Layers"
                     }, {
                         id: 'summary',
-                        title: "Summary Form"
+                        title: "Summary Form",
+                        padding: 10
                     }, {
                         id: 'observations',
                         title: "Observations",
-                        padding: 0,
-                        bodyCfg: {
-                            tag: "iframe",
-                            src: "/observations/obsform/",
-                            style: {border: "0px none"}
-                        },
-                        listeners: {
-                            "resize": adjustIframeSize,
-                            "afterlayout": adjustIframeSize
-                        }
+                        layout: "fit",
+                        autoScroll: false
                     }//, {
                         //id: "fault_source",
                         //title: "Fault Section"
@@ -178,6 +165,9 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                     width: 410,
                     height: 410
                 }                    
+            }, {
+                ptype: "app_observations",
+                outputTarget: "observations"
             }]
         });
 
