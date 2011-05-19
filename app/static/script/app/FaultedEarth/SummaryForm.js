@@ -86,7 +86,7 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
             }, {
                 xtype: "textfield",
                 ref: "nameContains",
-                fieldLabel: "Searh for name",
+                fieldLabel: "Search for name",
                 validationDelay: 500,
                 listeners: {
                     "valid": this.updateFilter,
