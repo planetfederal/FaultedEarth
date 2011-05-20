@@ -165,7 +165,7 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
             new OpenLayers.Filter.Comparison({
                 type: OpenLayers.Filter.Comparison.LIKE,
                 property: "name",
-                value: form.nameContains.getValue() + "*",
+                value: "*" + form.nameContains.getValue() + "*",
                 matchCase: false
             })
         );
