@@ -148,8 +148,8 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
             } else {
                 featureManager.setLayer(this.layerRecord);
             }
-            featureManager.on("layerchange", function() {
-                featureManager.loadFeatures(this.filter);
+            featureManager.on("layerchange", function(mgr, rec) {
+                rec === this.layerRecord && featureManager.loadFeatures(this.filter);
             }, this);
         }
     },
