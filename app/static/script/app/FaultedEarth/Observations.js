@@ -21,6 +21,9 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
         
         featureManager.featureLayer.events.on({
             "featureselected": function(e) {
+                if (!e.feature.fid) {
+                    return;
+                }
                 if (featureManager.layerRecord.get("name") == "geonode:fault_summary") {
                     this.output[0].ownerCt.enable();
                     this.target.summaryId = e.feature.fid;
@@ -160,9 +163,9 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
     
     setIFrameUrl: function(url) {
         var iFrame = this.output[0].iFrame;
-        var currentUrl = (iFrame.rendered ? iFrame.body.dom : iframe.bodyCfg).src;
+        var currentUrl = (iFrame.rendered ? iFrame.body.dom : iFrame.bodyCfg).src;
         if (url != currentUrl) {
-            (iFrame.rendered ? iFrame.body.dom : iframe.bodyCfg).src = url;
+            (iFrame.rendered ? iFrame.body.dom : iFrame.bodyCfg).src = url;
         }
     },
     
