@@ -12,8 +12,6 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
     
     layerRecord: null,
     
-    summaryId: null,
-    
     filter: null,
     
     autoActivate: false,
@@ -25,14 +23,14 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
             "featureselected": function(e) {
                 if (featureManager.layerRecord.get("name") == "geonode:fault_summary") {
                     this.output[0].ownerCt.enable();
-                    this.summaryId = e.feature.fid;
+                    this.target.summaryId = e.feature.fid;
                     this.setIFrameUrl(
                         "/observations/obsform/new/?summary_id=" + e.feature.fid.split(".").pop()
                     );
                 } else if (featureManager.layerRecord.get("name") == "geonode:observations_observations") {
                     this.setIFrameUrl(
                         "/observations/obsform/" + e.feature.fid.split(".").pop() +
-                        "/?summary_id=" + this.summaryId.split(".").pop()
+                        "/?summary_id=" + this.target.summaryId.split(".").pop()
                     );
                 }
             },
@@ -41,7 +39,7 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
                     this.output[0].ownerCt.disable();
                 } else if (featureManager.layerRecord.get("name") == "geonode:observations_observations") {
                     this.setIFrameUrl(
-                        "/observations/obsform/new/?summary_id=" + this.summaryId.split(".").pop()
+                        "/observations/obsform/new/?summary_id=" + this.target.summaryId.split(".").pop()
                     );
                 }
             },
@@ -162,9 +160,10 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
     
     setIFrameUrl: function(url) {
         var iFrame = this.output[0].iFrame;
-        iFrame.rendered ?
-            iFrame.body.dom.src = url :
-            iFrame.bodyCfg.src = url;
+        var currentUrl = (iFrame.rendered ? iFrame.body.dom : iframe.bodyCfg).src;
+        if (url != currentUrl) {
+            (iFrame.rendered ? iFrame.body.dom : iframe.bodyCfg).src = url;
+        }
     },
     
     updateFilter: function(field, rec) {
@@ -175,14 +174,14 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
             case "mine":
                 filter = new OpenLayers.Filter.Comparison({
                     property: "summary_id",
-                    value: this.summaryId.split(".").pop(),
+                    value: this.target.summaryId.split(".").pop(),
                     type: OpenLayers.Filter.Comparison.EQUAL_TO
                 });
                 break;
             case "theirs":
                 filter = new OpenLayers.Filter.Comparison({
                     property: "summary_id",
-                    value: this.summaryId.split(".").pop(),
+                    value: this.target.summaryId.split(".").pop(),
                     type: OpenLayers.Filter.Comparison.NOT_EQUAL_TO
                 });
                 break;

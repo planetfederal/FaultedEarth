@@ -1,4 +1,7 @@
 FaultedEarth = Ext.extend(gxp.Viewer, {
+
+    summaryId: null,
+    
     constructor: function(config) {
         
         Ext.Window.prototype.shadow = false;
