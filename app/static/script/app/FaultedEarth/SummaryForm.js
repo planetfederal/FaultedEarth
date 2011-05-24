@@ -67,7 +67,7 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
                     iconCls: "icon-import",
                     handler: function() {
                         var featureManager = this.target.tools[this.featureManager];
-                        if (this.output[0].newFeaturesCheckbox.getValue()) {
+                        if (this.output[0].newFeaturesOnly.getValue()) {
                             featureManager.on("clearfeatures", this.showUploadWindow, this, {single: true});
                             featureManager.clearFeatures();
                         } else {
