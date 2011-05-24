@@ -240,7 +240,7 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
                                 file.fileName + "/file.shp?update=overwrite",
                             xmlData: file,
                             headers: {
-                                "Content-type": file.fileName.split(".").pop().toLowerCase() == "zip" ?
+                                "Content-Type": file.fileName.split(".").pop().toLowerCase() == "zip" ?
                                     "application/zip" : file.type
                             },
                             success: this.handleUpload.createDelegate(this,
