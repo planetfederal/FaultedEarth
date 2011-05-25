@@ -33,9 +33,27 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
     
     autoActivate: false,
     
-    constructor: function(config) {
-        FaultedEarth.SummaryForm.superclass.constructor.apply(this, arguments);
+    init: function(target) {
+        FaultedEarth.SummaryForm.superclass.init.apply(this, arguments);
+        
         this.sessionFids = [];
+        var featureManager = target.tools[this.featureManager];
+        featureManager.featureLayer.events.on({
+            "featureselected": function(e) {
+                if (!e.feature.fid) {
+                    return;
+                }
+                if (featureManager.layerRecord.get("name") == "geonode:fault_summary") {
+                    this.target.summaryId = e.feature.fid;
+                }
+            },
+            "featureunselected": function(e) {
+                if (this.active && featureManager.layerRecord.get("name") == "geonode:fault_summary") {
+                    this.target.summaryId = null;
+                }
+            },
+            scope: this
+        });
     },
     
     addOutput: function(config) {
@@ -153,7 +171,7 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
                                 feature.layer.selectedFeatures.push(feature);
                                 feature.layer.events.triggerEvent("featureselected", {feature: feature});
                             }
-                        }).createDelegate(this), 0)
+                        }).createDelegate(this), 0);
                     },
                     scope: this
                 });

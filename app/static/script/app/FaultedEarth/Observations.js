@@ -12,6 +12,8 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
     
     layerRecord: null,
     
+    observationId: null,
+    
     filter: null,
     
     autoActivate: false,
@@ -24,26 +26,26 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
                 if (!e.feature.fid) {
                     return;
                 }
-                if (featureManager.layerRecord.get("name") == "geonode:fault_summary") {
-                    this.output[0].ownerCt.enable();
-                    this.target.summaryId = e.feature.fid;
-                    this.setIFrameUrl(
-                        "/observations/obsform/new/?summary_id=" + e.feature.fid.split(".").pop()
-                    );
-                } else if (featureManager.layerRecord.get("name") == "geonode:observations_observations") {
+                if (featureManager.layerRecord.get("name") == "geonode:observations_observations") {
+                    this.observationId = e.feature.fid;
                     this.setIFrameUrl(
                         "/observations/obsform/" + e.feature.fid.split(".").pop() +
                         "/?summary_id=" + this.target.summaryId.split(".").pop()
                     );
-                }
-            },
-            "featureunselected": function(e) {
-                if (!this.active && featureManager.layerRecord.get("name") == "geonode:fault_summary") {
-                    this.output[0].ownerCt.disable();
-                } else if (featureManager.layerRecord.get("name") == "geonode:observations_observations") {
+                } else if (this.target.summaryId) {
+                    this.output[0].ownerCt.enable();
                     this.setIFrameUrl(
                         "/observations/obsform/new/?summary_id=" + this.target.summaryId.split(".").pop()
                     );
+                }
+            },
+            "featureunselected": function(e) {
+                if (featureManager.layerRecord.get("name") == "geonode:observations_observations") {
+                    this.setIFrameUrl(
+                        "/observations/obsform/new/?summary_id=" + this.target.summaryId.split(".").pop()
+                    );
+                } else if (!this.target.summaryId) {
+                    this.output[0].ownerCt.disable();
                 }
             },
             scope: this
@@ -150,9 +152,26 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
                 featureManager.setLayer(this.layerRecord);
             }
             featureManager.on("layerchange", function(mgr, rec) {
-                rec === this.layerRecord && featureManager.loadFeatures(this.filter);
+                if (rec === this.layerRecord) {
+                    mgr.loadFeatures(this.filter);
+                    mgr.featureStore.on({
+                        "load": function() {
+                            this.observationId && window.setTimeout((function() {
+                                var feature = mgr.featureLayer.getFeatureByFid(this.observationId);
+                                if (feature && feature.layer.selectedFeatures.indexOf(feature) == -1) {
+                                    feature.layer.selectedFeatures.push(feature);
+                                    feature.layer.events.triggerEvent("featureselected", {feature: feature});
+                                }
+                            }).createDelegate(this), 0);
+                        },
+                        scope: this
+                    });
+                }
             }, this);
         }
+        this.observationId || this.setIFrameUrl(
+            "/observations/obsform/new/?summary_id=" + this.target.summaryId.split(".").pop()
+        );
     },
     
     deactivate: function() {
@@ -162,6 +181,9 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
     },
     
     setIFrameUrl: function(url) {
+        if (!this.active) {
+            return;
+        }
         var iFrame = this.output[0].iFrame;
         var currentUrl = (iFrame.rendered ? iFrame.body.dom : iFrame.bodyCfg).src;
         if (url != currentUrl) {
