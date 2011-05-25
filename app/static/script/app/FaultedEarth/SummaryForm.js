@@ -137,7 +137,7 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
                         var fid;
                         for (var action in data) {
                             for (var i=data[action].length-1; i>=0; --i) {
-                                fid = data[action].feature.fid;
+                                fid = data[action][i].feature.fid;
                                 this.sessionFids.remove(fid);  
                                 if (action != "destroy") {
                                     this.sessionFids.push(fid);
@@ -270,11 +270,19 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
         }).read({
             callback: function(response) {
                 var extent = new OpenLayers.Bounds();
-                var features = response.features;
+                var features = response.features, feature, date;
                 for (var i=features.length-1; i>=0; --i) {
-                    extent.extend(features[i].geometry.getBounds());
-                    features[i].fid = null;
-                    features[i].state = OpenLayers.State.INSERT;
+                    feature = features[i];
+                    extent.extend(feature.geometry.getBounds());
+                    feature.fid = null;
+                    feature.state = OpenLayers.State.INSERT;
+                    // convert dates
+                    for (var a in feature.attributes) {
+                        date = Date.parseDate(feature.attributes[a], "Y/m/d");
+                        if (date) {
+                            feature.attributes[a] = date.format("c");
+                        }
+                    }
                 }
                 var featureManager = this.target.tools[this.featureManager];
                 featureManager.featureLayer.addFeatures(features);
