@@ -9,7 +9,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
         // property names for FeatureEditor and FeatureGrid
         var propertyNames = {
             // custom fied names for the fault summary table
-            "name": "Name",
+            "name": "Fault Name",
             "is_episodi": "Episodic behaviour",
             "length": "Length",
             "u_sm_d_min": "Upper seismogenic depth min",
@@ -39,9 +39,32 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
             "mov_max": "Age of last movement max",
             "mov_pref": "Age of last movement pref",
             "completene": "Data completeness",
+            "created": "Date created",
             "compiler": "Compiled by",
             "contrib": "Contributed by",
-            "modified": "Last updated"
+            "modified": "Last updated",
+            // custom fied names for the observations table
+            "observationType": "Observation Type",
+            "slipType": "Slip Type",
+            "hv_ratio": "H:V Ratio",
+            "rake": "Rake (deg)",
+            "net_slip_rate_min": "Net Slip Rate Min (mm/yr)",
+            "net_slip_rate_max": "Net Slip Rate Max (mm/yr)",
+            "net_slip_rate_pref": "Net Slip Rate Pref (mm/yr)",
+            "dip_slip_rate_min": "Dip Slip Rate Min (mm/yr)",
+            "dip_slip_rate_max": "Dip Slip Rate Max (mm/yr)",
+            "dip_slip_rate_pref": "Dip Slip Rate Pref (mm/yr)",
+            "marker_age": "Marker Age (yrs BP)",
+            "slip_rate_category": "Slip Rate Category",
+            "strike_slip_rate_min": "Strike Slip Rate Min (mm/yr)",
+            "strike_slip_rate_max": "Strike Slip Rate Max (mm/yr)",
+            "strike_slip_rate_pref": "Strike Slip Rate Pref (mm/yr)",
+            "vertical_slip_rate_min": "Vertical Slip Rate Min (mm/yr)",
+            "vertical_slip_rate_max": "Vertical Slip Rate Max (mm/yr)",
+            "vertical_slip_rate_pref": "Vertical Slip Rate Pref (mm/yr)",
+            "site": "Site",
+            "notes": "Notes",
+            "summary_id": "Fault Summary ID"
         };
         
         Ext.applyIf(config, {
