@@ -29,8 +29,8 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
                 if (featureManager.layerRecord.get("name") == "geonode:observations_observations") {
                     this.observationId = e.feature.fid;
                     this.setIFrameUrl(
-                        "/observations/obsform/" + e.feature.fid.split(".").pop() +
-                        "/?summary_id=" + this.target.summaryId.split(".").pop()
+                        "/observations/obsform/edit/" + e.feature.fid.split(".").pop() +
+                        "/summary_id/" + this.target.summaryId.split(".").pop()
                     );
                 } else if (this.target.summaryId) {
                     this.output[0].ownerCt.enable();
@@ -170,7 +170,7 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
             }, this);
         }
         this.observationId || this.setIFrameUrl(
-            "/observations/obsform/new/?summary_id=" + this.target.summaryId.split(".").pop()
+            "/observations/obsform/new/summary/" + this.target.summaryId.split(".").pop()
         );
     },
     
