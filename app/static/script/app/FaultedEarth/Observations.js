@@ -35,14 +35,14 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
                 } else if (this.target.summaryId) {
                     this.output[0].ownerCt.enable();
                     this.setIFrameUrl(
-                        "/observations/obsform/new/?summary_id=" + this.target.summaryId.split(".").pop()
+                        "/observations/obsform/new/summary_id/" + this.target.summaryId.split(".").pop()
                     );
                 }
             },
             "featureunselected": function(e) {
                 if (featureManager.layerRecord.get("name") == "geonode:observations_observations") {
                     this.setIFrameUrl(
-                        "/observations/obsform/new/?summary_id=" + this.target.summaryId.split(".").pop()
+                        "/observations/obsform/new/summary_id/" + this.target.summaryId.split(".").pop()
                     );
                 } else if (!this.target.summaryId) {
                     this.output[0].ownerCt.disable();
@@ -170,7 +170,7 @@ FaultedEarth.Observations = Ext.extend(gxp.plugins.Tool, {
             }, this);
         }
         this.observationId || this.setIFrameUrl(
-            "/observations/obsform/new/summary/" + this.target.summaryId.split(".").pop()
+            "/observations/obsform/new/summary_id/" + this.target.summaryId.split(".").pop()
         );
     },
     
