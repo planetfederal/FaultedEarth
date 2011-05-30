@@ -54,9 +54,6 @@
                     osm: {
                         ptype: "gxp_osmsource"
                     },
-                    google: {
-                        ptype: "gxp_googlesource"
-                    },
                     ol: {
                         ptype: "gxp_olsource"
                     }
@@ -73,29 +70,19 @@
                         20037508.34, 20037508.34
                     ],
                     layers: [{
-                        source: "google",
-                        title: "Google Terrain",
-                        name: "TERRAIN",
-                        group: "background"
-                    },{
-                        source: "google",
-                        title: "Google Hybrid",
-                        name: "HYBRID",
-                        group: "background"
-                    },{
+						source: 'local',
+						title: 'Natural Earth',
+						name: 'natural_earth',
+						cached: 'true',
+						group: 'background',
+						fixed: 'true'
+					},
+					{
                         source: "osm",
                         name: "mapnik",
                         group: "background",
                         visibility: false
-                    }, {
-                        source: "ol",
-                        group: "background",
-                        fixed: true,
-                        type: "OpenLayers.Layer",
-                        args: [
-                            "None", {visibility: false}
-                        ]
-                    }, {
+                    },  {
                         source: "local",
                         name: "geonode:fault_summary"
                     }, {
