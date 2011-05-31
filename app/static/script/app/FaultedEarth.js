@@ -10,7 +10,8 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
         var propertyNames = {
             // custom fied names for the fault summary table
             "name": "Fault Name",
-            "is_episodi": "Episodic behaviour (yes/no, active/inactive)",
+            "episodi_is": "Episodic behaviour (yes/no)",
+            "episodi_ac": "Episodic behaviour (active/inactive)",
             "length": "Length (km, pref, min, max)",
             "u_sm_d_min": "Upper seismogenic depth min (km, 1, 2, 3, or 4)",
             "u_sm_d_max": "Upper seismogenic depth max (km, 1, 2, 3, or 4)",
@@ -23,7 +24,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
             "dip_max": "Dip max (...\u00B0 1, 2, 3, or 4)",
             "dip_pref": "Dip pref (...\u00B0 1, 2, 3, or 4)",
             "dip_dir": "Dip direction (...\u00B0 1, 2, 3, or 4)",
-            "down_thro": "Downthrow side (N, S, W, E or NW etc.)",
+            "down_thro": "Downthrown side (N, S, W, E or NW etc.)",
             "slip_typ": "Slip type (Reverse etc.)",
             "slip_r_min": "Slip rate min (mm/yr, 1, 2, 3, or 4)",
             "slip_r_max": "Slip rate max (mm/yr, 1, 2, 3, or 4)",
@@ -39,9 +40,9 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
             "mov_max": "Age of last movement max (yr BP)",
             "mov_pref": "Age of last movement pref (yr BP)",
             "completene": "Data completeness (1, 2, 3, or 4)",
-            "created": "Date created (name)",
+            "created": "Date created (date)",
             "compiler": "Compiled by (name)",
-            "contrib": "Contributed by (date)",
+            "contrib": "Contributed by (name)",
             // custom fied names for the observations table
             "observationType": "Observation Type",
             "slipType": "Slip Type",
