@@ -45,7 +45,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
             "mov_min": "Age of last movement min (yr BP)",
             "mov_max": "Age of last movement max (yr BP)",
             "mov_pref": "Age of last movement pref (yr BP)",
-            "mov_com": "Age movement completeness (1, 2, 3, or 4)",
+            "all_com": "Overall data completeness (1, 2, 3, or 4)",
             "created": "Date created (date)",
             "compiler": "Compiled by (name)",
             "contrib": "Contributed by (name)",
