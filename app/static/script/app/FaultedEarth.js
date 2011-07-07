@@ -70,7 +70,14 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
             "vertical_slip_rate_pref": "Vertical Slip Rate Pref (mm/yr)",
             "site": "Site",
             "notes": "Notes",
-            "summary_id": "Fault Summary ID"
+            "summary_id": "Fault Summary ID",
+			// custom fied names for fault trace form
+			"fault_name": "Fault Name",
+			"loc_meth": "Location Method",
+			"scale": "Scale",
+			"accuracy": "Accuracy",
+			"geomor_exp": "Geomorphic Expression",
+			"notes": "Notes"
         };
         
         Ext.applyIf(config, {
@@ -108,7 +115,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                         title: "Layers"
                     }, {
                         id: 'summary',
-                        title: "Summary Form",
+                        title: "Trace Form",
                         padding: 10
                     }, {
                         id: 'observations',
