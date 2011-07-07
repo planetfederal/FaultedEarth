@@ -71,13 +71,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
             "site": "Site",
             "notes": "Notes",
             "summary_id": "Fault Summary ID",
-			// custom fied names for fault trace form
-			"fault_name": "Fault Name",
-			"loc_meth": "Location Method",
-			"scale": "Scale",
-			"accuracy": "Accuracy",
-			"geomor_exp": "Geomorphic Expression",
-			"notes": "Notes"
+
         };
         
         Ext.applyIf(config, {
