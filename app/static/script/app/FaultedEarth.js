@@ -115,7 +115,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
                         title: "Layers"
                     }, {
                         id: 'summary',
-                        title: "Trace Form",
+                        title: "Fault Section Summary Form",
                         padding: 10
                     }, {
                         id: 'observations',
