@@ -67,7 +67,7 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
                 xtype: "container",
                 layout: "hbox",
                 cls: "composite-wrap",
-                fieldLabel: "Create or edit faults",
+                fieldLabel: "Create or edit fault sections",
                 items: [{
                     id: this.id + "_tooltarget",
                     xtype: "container",
@@ -78,7 +78,7 @@ FaultedEarth.SummaryForm = Ext.extend(gxp.plugins.Tool, {
                 xtype: "container",
                 layout: "hbox",
                 cls: "composite-wrap",
-                fieldLabel: "Upload faults",
+                fieldLabel: "Upload a fault section",
                 items: [{
                     xtype: "button",
                     text: "Import",
