@@ -10,7 +10,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
         var propertyNames = {
             // custom fied names for the fault summary table
             "name": "Fault Name",
-			"sec_name": "Fault Section Name"
+			"sec_name": "Fault Section Name",
             "episodi_is": "Episodic behaviour (yes/no)",
             "episodi_ac": "Episodic behaviour (active/inactive)",
             "length": "Length (km, pref, min, max)",
