@@ -71,7 +71,7 @@ FaultedEarth = Ext.extend(gxp.Viewer, {
             "vertical_slip_rate_pref": "Vertical Slip Rate Pref (mm/yr)",
             "site": "Site",
             "notes": "Notes",
-            "summary_id": "Fault Summary ID",
+            "summary_id": "Fault Section Summary ID",
 			// custom fied names for fault trace form
 			"fault_name": "Fault Name",
 			"loc_meth": "Location Method",
