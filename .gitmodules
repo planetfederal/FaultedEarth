@@ -7,3 +7,6 @@
 [submodule "app/static/externals/openlayers"]
 	path = app/static/externals/openlayers
 	url = https://github.com/openlayers/openlayers.git
+[submodule "/Users/bmwyss/Projects/FaultedEarth/app/static/externals/openlayers"]
+	path = /Users/bmwyss/Projects/FaultedEarth/app/static/externals/openlayers
+	url = https://github.com/openlayers/openlayers
